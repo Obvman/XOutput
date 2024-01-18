@@ -19,41 +19,28 @@ namespace XOutput.Devices
         /// <summary>
         /// Gets the changed device.
         /// </summary>
-        public IDevice Device => device;
+        public IDevice Device { get; }
         /// <summary>
         /// Gets the changed values.
         /// </summary>
-        public IEnumerable<InputSource> ChangedValues => changedValues;
+        public IEnumerable<InputSource> ChangedValues { get; }
         /// <summary>
         /// Gets the changed DPad values.
         /// </summary>
-        public IEnumerable<int> ChangedDPads => changedDPads;
+        public IEnumerable<int> ChangedDPads { get; }
 
-        protected IDevice device;
-        protected IEnumerable<InputSource> changedValues;
-        protected IEnumerable<int> changedDPads;
-
-        public DeviceInputChangedEventArgs(IDevice device)
+        public DeviceInputChangedEventArgs(IDevice device, IEnumerable<InputSource> changedValues)
         {
-            this.device = device;
-            changedValues = new InputSource[0];
-            changedDPads = new int[0];
+            Device = device;
+            ChangedValues = changedValues;
+            ChangedDPads = new int[0];
         }
 
-        public void Refresh(IEnumerable<InputSource> changedValues)
+        public DeviceInputChangedEventArgs(IDevice device, IEnumerable<InputSource> changedValues, IEnumerable<int> changedDPads)
         {
-            this.changedValues = changedValues;
-        }
-
-        public void Refresh(IEnumerable<int> changedDPads)
-        {
-            this.changedDPads = changedDPads;
-        }
-
-        public void Refresh(IEnumerable<InputSource> changedValues, IEnumerable<int> changedDPads)
-        {
-            this.changedDPads = changedDPads;
-            this.changedValues = changedValues;
+            Device = device;
+            ChangedDPads = changedDPads;
+            ChangedValues = changedValues;
         }
 
         /// <summary>
@@ -61,19 +48,13 @@ namespace XOutput.Devices
         /// </summary>
         /// <param name="type">input type</param>
         /// <returns></returns>
-        public bool HasValueChanged(InputSource type)
-        {
-            return changedValues.Contains(type);
-        }
+        public bool HasValueChanged(InputSource type) => ChangedValues.Contains(type);
 
         /// <summary>
         /// Gets if the value of the DPad has changed.
         /// </summary>
         /// <param name="type">input type</param>
         /// <returns></returns>
-        public bool HasDPadChanged(int dPadIndex)
-        {
-            return changedDPads.Contains(dPadIndex);
-        }
+        public bool HasDPadChanged(int dPadIndex) => ChangedDPads.Contains(dPadIndex);
     }
 }

@@ -73,7 +73,6 @@ namespace XOutput.Devices.Input.Keyboard
         private readonly KeyboardSource[] sources;
         private readonly DeviceState state;
         private readonly InputConfig inputConfig;
-        private DeviceInputChangedEventArgs deviceInputChangedEventArgs;
 
         /// <summary>
         /// Creates a new keyboard device instance.
@@ -82,7 +81,6 @@ namespace XOutput.Devices.Input.Keyboard
         {
             sources = Enum.GetValues(typeof(Key)).OfType<Key>().Where(x => x != Key.None).OrderBy(x => x.ToString()).Select(x => new KeyboardSource(this, x.ToString(), x)).ToArray();
             state = new DeviceState(sources, 0);
-            deviceInputChangedEventArgs = new DeviceInputChangedEventArgs(this);
             inputConfig = new InputConfig();
             inputRefresher = new Thread(InputRefresher);
             inputRefresher.Name = "Keyboard input notification";
@@ -111,20 +109,14 @@ namespace XOutput.Devices.Input.Keyboard
         /// </summary>
         /// <param name="inputType">Source of input</param>
         /// <returns>Value</returns>
-        public double Get(InputSource source)
-        {
-            return source.Value;
-        }
+        public double Get(InputSource source) => source.Value;
 
         /// <summary>
         /// Display name.
         /// <para>Overrides <see cref="object.ToString()"/></para>
         /// </summary>
         /// <returns>Friendly name</returns>
-        public override string ToString()
-        {
-            return "Keyboard";
-        }
+        public override string ToString() => "Keyboard";
 
         /// <summary>
         /// This function does nothing. Keyboards have no force feedback motors.
@@ -170,12 +162,12 @@ namespace XOutput.Devices.Input.Keyboard
                     state.MarkChanged(source);
                 }
             }
-            var changes = state.GetChanges(force);
-            if (changes.Any())
+
+            if (state.AnyChanges())
             {
-                deviceInputChangedEventArgs.Refresh(changes);
-                InputChanged?.Invoke(this, deviceInputChangedEventArgs);
+                InputChanged?.Invoke(this, new DeviceInputChangedEventArgs(this, state.GetChanges(force)));
             }
+
             return true;
         }
     }

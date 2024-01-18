@@ -11,8 +11,9 @@ namespace XOutput.Logging
     public abstract class AbstractLogger : ILogger
     {
         private readonly Type loggerType;
-        public Type LoggerType => loggerType;
         private readonly int level;
+
+        public Type LoggerType => loggerType;
         public int Level => level;
 
         protected AbstractLogger(Type loggerType, int level)
@@ -38,69 +39,31 @@ namespace XOutput.Logging
         }
 
         protected string CreatePrefix(DateTime time, LogLevel loglevel, string classname, string methodname)
-        {
-            return $"{time.ToString("yyyy-MM-dd HH\\:mm\\:ss.fff zzz")} {loglevel.Text} {classname}.{methodname}: ";
-        }
+            => $"{time:yyyy-MM-dd HH\\:mm\\:ss.fff zzz} {loglevel.Text} {classname}.{methodname}: ";
 
-        public Task Trace(string log)
-        {
-            return LogCheck(LogLevel.Trace, GetCallerMethodName(), log);
-        }
+        public Task Trace(string log) => LogCheck(LogLevel.Trace, GetCallerMethodName(), log);
 
-        public Task Trace(Func<string> log)
-        {
-            return LogCheck(LogLevel.Trace, GetCallerMethodName(), log);
-        }
+        public Task Trace(Func<string> log) => LogCheck(LogLevel.Trace, GetCallerMethodName(), log);
 
-        public Task Debug(string log)
-        {
-            return LogCheck(LogLevel.Debug, GetCallerMethodName(), log);
-        }
+        public Task Debug(string log) => LogCheck(LogLevel.Debug, GetCallerMethodName(), log);
 
-        public Task Debug(Func<string> log)
-        {
-            return LogCheck(LogLevel.Debug, GetCallerMethodName(), log);
-        }
+        public Task Debug(Func<string> log) => LogCheck(LogLevel.Debug, GetCallerMethodName(), log);
 
-        public Task Info(string log)
-        {
-            return LogCheck(LogLevel.Info, GetCallerMethodName(), log);
-        }
+        public Task Info(string log) => LogCheck(LogLevel.Info, GetCallerMethodName(), log);
 
-        public Task Info(Func<string> log)
-        {
-            return LogCheck(LogLevel.Info, GetCallerMethodName(), log);
-        }
+        public Task Info(Func<string> log) => LogCheck(LogLevel.Info, GetCallerMethodName(), log);
 
-        public Task Warning(string log)
-        {
-            return LogCheck(LogLevel.Warning, GetCallerMethodName(), log);
-        }
+        public Task Warning(string log) => LogCheck(LogLevel.Warning, GetCallerMethodName(), log);
 
-        public Task Warning(Func<string> log)
-        {
-            return LogCheck(LogLevel.Warning, GetCallerMethodName(), log);
-        }
+        public Task Warning(Func<string> log) => LogCheck(LogLevel.Warning, GetCallerMethodName(), log);
 
-        public Task Warning(Exception ex)
-        {
-            return LogCheck(LogLevel.Warning, GetCallerMethodName(), ex.ToString());
-        }
+        public Task Warning(Exception ex) => LogCheck(LogLevel.Warning, GetCallerMethodName(), ex.ToString());
 
-        public Task Error(string log)
-        {
-            return LogCheck(LogLevel.Error, GetCallerMethodName(), log);
-        }
+        public Task Error(string log) => LogCheck(LogLevel.Error, GetCallerMethodName(), log);
 
-        public Task Error(Func<string> log)
-        {
-            return LogCheck(LogLevel.Error, GetCallerMethodName(), log);
-        }
+        public Task Error(Func<string> log) => LogCheck(LogLevel.Error, GetCallerMethodName(), log);
 
-        public Task Error(Exception ex)
-        {
-            return LogCheck(LogLevel.Error, GetCallerMethodName(), ex.ToString());
-        }
+        public Task Error(Exception ex) => LogCheck(LogLevel.Error, GetCallerMethodName(), ex.ToString());
 
         protected Task LogCheck(LogLevel loglevel, string methodName, string log)
         {

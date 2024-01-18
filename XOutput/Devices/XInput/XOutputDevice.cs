@@ -44,7 +44,6 @@ namespace XOutput.Devices.XInput
         private readonly DPadDirection[] dPads = new DPadDirection[DPadCount];
         private readonly XOutputSource[] sources;
         private readonly DeviceState state;
-        private DeviceInputChangedEventArgs deviceInputChangedEventArgs;
 
         /// <summary>
         /// Creates a new XDevice.
@@ -56,7 +55,6 @@ namespace XOutput.Devices.XInput
             this.mapper = mapper;
             sources = XInputHelper.Instance.GenerateSources();
             state = new DeviceState(sources, DPadCount);
-            deviceInputChangedEventArgs = new DeviceInputChangedEventArgs(this);
         }
 
         ~XOutputDevice()
@@ -70,6 +68,7 @@ namespace XOutput.Devices.XInput
             {
                 source.InputChanged -= SourceInputChanged;
             }
+
             boundSources = sources;
             foreach (var source in boundSources)
             {
@@ -116,14 +115,13 @@ namespace XOutput.Devices.XInput
                     state.MarkChanged(s);
                 }
             }
-            var changes = state.GetChanges(force);
             dPads[0] = DPadHelper.GetDirection(GetBool(XInputTypes.UP), GetBool(XInputTypes.DOWN), GetBool(XInputTypes.LEFT), GetBool(XInputTypes.RIGHT));
             state.SetDPad(0, dPads[0]);
-            var changedDPads = state.GetChangedDpads(force);
-            if (changedDPads.Any() || changes.Any())
+            if (state.AnyChangedDpads(force) || state.AnyChanges(force))
             {
-                deviceInputChangedEventArgs.Refresh(changes, changedDPads);
-                InputChanged?.Invoke(this, deviceInputChangedEventArgs);
+                var changes = state.GetChanges(force);
+                var changedDPads = state.GetChangedDpads(force);
+                InputChanged?.Invoke(this, new DeviceInputChangedEventArgs(this, changes, changedDPads));
             }
             return true;
         }
@@ -147,10 +145,7 @@ namespace XOutput.Devices.XInput
         /// </summary>
         /// <param name="inputType">Type of input</param>
         /// <returns>boolean value</returns>
-        public bool GetBool(XInputTypes inputType)
-        {
-            return Get(inputType) > 0.5;
-        }
+        public bool GetBool(XInputTypes inputType) => Get(inputType) > 0.5;
 
         /// <summary>
         /// Gets the current state of the inputTpye.

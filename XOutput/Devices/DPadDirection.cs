@@ -24,9 +24,7 @@ namespace XOutput.Devices
         /// <summary>
         /// Gets all <see cref="DPadDirection"/> values.
         /// </summary>
-        public static DPadDirection[] Values => values;
-
-        private static DPadDirection[] values = ((DPadDirection[])Enum.GetValues(typeof(DPadDirection))).Where(d => d != DPadDirection.None).ToArray();
+        public static DPadDirection[] Values { get; } = ((DPadDirection[])Enum.GetValues(typeof(DPadDirection))).Where(d => d != DPadDirection.None).ToArray();
 
         /// <summary>
         /// Converts 4 bool values to DPadDirection.

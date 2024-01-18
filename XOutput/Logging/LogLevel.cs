@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace XOutput.Logging
 {
     /// <summary>
@@ -28,15 +27,13 @@ namespace XOutput.Logging
         /// </summary>
         public static readonly LogLevel Error = new LogLevel("ERROR", 100);
 
-        protected string text;
-        public string Text => text;
-        protected int level;
-        public int Level => level;
+        public string Text { get; }
+        public int Level { get; }
 
-        protected LogLevel(String text, int level)
+        private LogLevel(string text, int level)
         {
-            this.text = text;
-            this.level = level;
+            Text = text;
+            Level = level;
         }
     }
 }

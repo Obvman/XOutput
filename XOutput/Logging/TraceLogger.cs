@@ -12,6 +12,8 @@ namespace XOutput.Logging
     {
         public const string LogFile = "XOutput.log";
 
+        private Task currentTask;
+
         static TraceLogger()
         {
             System.Diagnostics.Trace.AutoFlush = true;
@@ -21,14 +23,13 @@ namespace XOutput.Logging
                 {
                     File.Delete(LogFile);
                 }
-                catch {
+                catch
+                {
                     // if the file is in use, append the file
                 }
             }
             System.Diagnostics.Trace.Listeners.Add(new TextWriterTraceListener(LogFile));
         }
-
-        private Task currentTask;
 
         public TraceLogger(Type loggerType, int level) : base(loggerType, level)
         {

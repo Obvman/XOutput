@@ -8,29 +8,29 @@ namespace XOutput.Devices
     /// </summary>
     public class DeviceState
     {
+        private readonly object syncLock = new object();
+
+        private readonly DPadDirection[] dPads;
+        private readonly List<InputSource> changedSources;
+        private readonly List<int> changedDpad;
+        private readonly List<int> allDpads;
+
         /// <summary>
         /// Gets the current values.
         /// </summary>
-        public IEnumerable<InputSource> Values => values;
+        public IEnumerable<InputSource> Values { get; }
+
         /// <summary>
         /// Gets the current DPad values.
         /// </summary>
         public IEnumerable<DPadDirection> DPads => dPads;
-        protected IEnumerable<InputSource> values;
-        protected DPadDirection[] dPads;
-        /// <summary>
-        /// Created once not to create memory waste.
-        /// </summary>
-        protected readonly List<InputSource> changedSources;
-        protected readonly List<int> changedDpad;
-        protected readonly List<int> allDpads;
 
         public DeviceState(IEnumerable<InputSource> types, int dPadCount)
         {
-            values = types.ToArray();
+            Values = types.ToArray();
             changedSources = new List<InputSource>(types.Count());
             dPads = new DPadDirection[dPadCount];
-            allDpads = Enumerable.Range(0, dPads.Length).ToList();
+            allDpads = Enumerable.Range(0, dPadCount).ToList();
             changedDpad = new List<int>();
         }
 
@@ -41,30 +41,55 @@ namespace XOutput.Devices
         /// <returns>changed DPad indices</returns>
         public bool SetDPad(int i, DPadDirection newValue)
         {
-            var oldValue = dPads[i];
-            if (newValue != oldValue)
+            lock (syncLock)
             {
-                dPads[i] = newValue;
-                changedDpad.Add(i);
-                return true;
+                var oldValue = dPads[i];
+                if (newValue != oldValue)
+                {
+                    dPads[i] = newValue;
+                    changedDpad.Add(i);
+                    return true;
+                }
             }
             return false;
         }
 
         public void ResetChanges()
         {
-            changedSources.Clear();
-            changedDpad.Clear();
+            lock (syncLock)
+            {
+                changedSources.Clear();
+                changedDpad.Clear();
+            }
         }
 
         public void MarkChanged(InputSource source)
         {
-            changedSources.Add(source);
+            lock (syncLock)
+            {
+                changedSources.Add(source);
+            }
+        }
+
+        public bool AnyChanges(bool force = false)
+        {
+            lock (syncLock)
+            {
+                return force ? Values.Any() : changedSources.Any();
+            }
+        }
+
+        public bool AnyChangedDpads(bool force = false)
+        {
+            lock (syncLock)
+            {
+                return force ? allDpads.Any() : changedDpad.Any();
+            }
         }
 
         public IEnumerable<InputSource> GetChanges(bool force = false)
         {
-            return force ? values : changedSources;
+            return force ? Values : changedSources;
         }
 
         public IEnumerable<int> GetChangedDpads(bool force = false)

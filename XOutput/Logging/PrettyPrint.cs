@@ -38,7 +38,7 @@ namespace XOutput.Logging
             return sb.ToString().Trim();
         }
 
-        private static void ToString(object obj, StringBuilder sb, string intend)
+        private static void ToString(object obj, StringBuilder sb, string indent)
         {
             foreach (var property in obj.GetType().GetProperties().Where(p => p.CanRead))
             {
@@ -53,27 +53,27 @@ namespace XOutput.Logging
                 }
                 if (value == null)
                 {
-                    sb.AppendLine(intend + property.Name + ": null");
+                    sb.AppendLine(indent + property.Name + ": null");
                 }
                 else if (value is IEnumerable && !(value is string))
                 {
-                    sb.AppendLine(intend + property.Name + ": [");
+                    sb.AppendLine(indent + property.Name + ": [");
                     foreach (var v in (IEnumerable)value)
                     {
-                        ToString(v, sb, intend + "  ");
-                        sb.AppendLine(intend + ",");
+                        ToString(v, sb, indent + "  ");
+                        sb.AppendLine(indent + ",");
                     }
                     sb.AppendLine("]");
                 }
                 else if (value.GetType().IsClass && !(value is string))
                 {
-                    sb.AppendLine(intend + property.Name + ": {");
-                    ToString(value, sb, intend + "  ");
-                    sb.AppendLine(intend + "}");
+                    sb.AppendLine(indent + property.Name + ": {");
+                    ToString(value, sb, indent + "  ");
+                    sb.AppendLine(indent + "}");
                 }
                 else
                 {
-                    sb.AppendLine(intend + property.Name + ": " + value);
+                    sb.AppendLine(indent + property.Name + ": " + value);
                 }
             }
             foreach (var field in obj.GetType().GetFields().Where(f => f.IsPublic))
@@ -89,27 +89,27 @@ namespace XOutput.Logging
                 }
                 if (value == null)
                 {
-                    sb.AppendLine(intend + field.Name + ": null");
+                    sb.AppendLine(indent + field.Name + ": null");
                 }
                 else if (value is IEnumerable && !(value is string))
                 {
-                    sb.AppendLine(intend + field.Name + ": [");
+                    sb.AppendLine(indent + field.Name + ": [");
                     foreach (var v in (IEnumerable)value)
                     {
-                        ToString(v, sb, intend + "  ");
-                        sb.AppendLine(intend + ",");
+                        ToString(v, sb, indent + "  ");
+                        sb.AppendLine(indent + ",");
                     }
                     sb.AppendLine("]");
                 }
                 else if (value.GetType().IsClass && !(value is string))
                 {
-                    sb.AppendLine(intend + field.Name + ": {");
-                    ToString(value, sb, intend + "  ");
-                    sb.AppendLine(intend + "}");
+                    sb.AppendLine(indent + field.Name + ": {");
+                    ToString(value, sb, indent + "  ");
+                    sb.AppendLine(indent + "}");
                 }
                 else
                 {
-                    sb.AppendLine(intend + field.Name + ": " + value);
+                    sb.AppendLine(indent + field.Name + ": " + value);
                 }
             }
         }

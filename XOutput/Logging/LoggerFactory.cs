@@ -25,9 +25,6 @@ namespace XOutput.Logging
         /// <param name="type">class type</param>
         /// <param name="level">predefined loglevel</param>
         /// <returns></returns>
-        public static ILogger GetLogger(Type type, int level)
-        {
-            return new TraceLogger(type, level);
-        }
+        public static ILogger GetLogger(Type type, int level) => new TraceLogger(type, level);
     }
 }

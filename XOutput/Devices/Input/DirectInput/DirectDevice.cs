@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
@@ -114,7 +113,6 @@ namespace XOutput.Devices.Input.DirectInput
         private bool connected = false;
         private readonly Thread inputRefresher;
         private bool disposed = false;
-        private DeviceInputChangedEventArgs deviceInputChangedEventArgs;
 
         /// <summary>
         /// Creates a new DirectDevice instance.
@@ -147,7 +145,7 @@ namespace XOutput.Devices.Input.DirectInput
             {
                 joystick.SetCooperativeLevel(new WindowInteropHelper(Application.Current.MainWindow).Handle, CooperativeLevel.Background | CooperativeLevel.Exclusive);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 logger.Warning($"Failed to set cooperative level to exclusive for {ToString()}");
             }
@@ -177,18 +175,22 @@ namespace XOutput.Devices.Input.DirectInput
                     }
                 }
             }
+
             try
             {
                 logger.Info(joystick.Properties.InstanceName + " " + ToString());
                 logger.Info(PrettyPrint.ToString(joystick));
                 logger.Info(PrettyPrint.ToString(joystick.GetObjects()));
-            } catch { }
+            }
+            catch
+            {
+            }
+
             foreach (var obj in joystick.GetObjects())
             {
                 logger.Info("  " + obj.Name + " " + obj.ObjectId + " offset: " + obj.Offset + " objecttype: " + obj.ObjectType.ToString() + " " + obj.Usage);
             }
             state = new DeviceState(sources, joystick.Capabilities.PovCount);
-            deviceInputChangedEventArgs = new DeviceInputChangedEventArgs(this);
             inputConfig = new InputConfig(ForceFeedbackCount);
             inputRefresher = new Thread(InputRefresher)
             {
@@ -298,6 +300,7 @@ namespace XOutput.Devices.Input.DirectInput
                     {
                         state.SetDPad(i, GetDPadValue(i));
                     }
+
                     foreach (var source in sources)
                     {
                         if (source.Refresh(GetCurrentState()))
@@ -305,12 +308,12 @@ namespace XOutput.Devices.Input.DirectInput
                             state.MarkChanged(source);
                         }
                     }
-                    var changes = state.GetChanges(force);
-                    var dpadChanges = state.GetChangedDpads(force);
-                    if (changes.Any() || dpadChanges.Any())
+
+                    if (state.AnyChangedDpads(force) || state.AnyChanges(force))
                     {
-                        deviceInputChangedEventArgs.Refresh(changes, dpadChanges);
-                        InputChanged?.Invoke(this, deviceInputChangedEventArgs);
+                        var changes = state.GetChanges(force);
+                        var changedDPads = state.GetChangedDpads(force);
+                        InputChanged?.Invoke(this, new DeviceInputChangedEventArgs(this, changes, changedDPads));
                     }
                     return true;
                 }

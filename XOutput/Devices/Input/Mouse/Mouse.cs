@@ -73,7 +73,6 @@ namespace XOutput.Devices.Input.Mouse
         private readonly MouseSource[] sources;
         private readonly DeviceState state;
         private readonly InputConfig inputConfig;
-        private DeviceInputChangedEventArgs deviceInputChangedEventArgs;
 
         /// <summary>
         /// Creates a new keyboard device instance.
@@ -82,7 +81,6 @@ namespace XOutput.Devices.Input.Mouse
         {
             sources = Enum.GetValues(typeof(MouseButton)).OfType<MouseButton>().Select(x => new MouseSource(this, x.ToString(), x)).ToArray();
             state = new DeviceState(sources, 0);
-            deviceInputChangedEventArgs = new DeviceInputChangedEventArgs(this);
             inputConfig = new InputConfig();
             inputRefresher = new Thread(InputRefresher);
             inputRefresher.Name = "Mouse input notification";
@@ -173,12 +171,12 @@ namespace XOutput.Devices.Input.Mouse
                     }
                 }
             });
-            var changes = state.GetChanges(force);
-            if (changes.Any())
+
+            if (state.AnyChanges())
             {
-                deviceInputChangedEventArgs.Refresh(changes);
-                InputChanged?.Invoke(this, deviceInputChangedEventArgs);
+                InputChanged?.Invoke(this, new DeviceInputChangedEventArgs(this, state.GetChanges(force)));
             }
+
             return true;
         }
     }
