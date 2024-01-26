@@ -265,6 +265,7 @@ namespace XOutput.UI.Windows
             var controllerView = new ControllerView(new ControllerViewModel(new ControllerModel(), gameController, Model.IsAdmin, log));
             controllerView.ViewModel.Model.CanStart = installed;
             controllerView.RemoveClicked += RemoveController;
+            controllerView.DuplicateClicked += DuplicateController;
             Model.Controllers.Add(controllerView);
             log(string.Format(LanguageModel.Instance.Translate("ControllerConnected"), gameController.DisplayName));
             if (mapper?.StartWhenConnected == true)
@@ -277,13 +278,32 @@ namespace XOutput.UI.Windows
         public void RemoveController(ControllerView controllerView)
         {
             var controller = controllerView.ViewModel.Model.Controller;
+            controllerView.DuplicateClicked -= DuplicateController;
+            controllerView.RemoveClicked -= RemoveController;
             controllerView.ViewModel.Dispose();
             controller.Dispose();
             Model.Controllers.Remove(controllerView);
-            logger.Info($"{controller.ToString()} is disconnected.");
+            logger.Info($"{controller} is disconnected.");
             log(string.Format(LanguageModel.Instance.Translate("ControllerDisconnected"), controller.DisplayName));
             Controllers.Instance.Remove(controller);
             settings.Mapping.RemoveAll(m => m.Id == controller.Mapper.Id);
+        }
+
+        public void DuplicateController(ControllerView originalControllerView)
+        {
+            var duplicatedMapper = originalControllerView.ViewModel.Model.Controller.Mapper.Duplicate();
+
+            var gameController = new GameController(duplicatedMapper);
+            Controllers.Instance.Add(gameController);
+
+            var controllerView = new ControllerView(new ControllerViewModel(new ControllerModel(), gameController, Model.IsAdmin, log));
+            controllerView.ViewModel.Model.CanStart = installed;
+            controllerView.RemoveClicked += RemoveController;
+            controllerView.DuplicateClicked += DuplicateController;
+            Model.Controllers.Add(controllerView);
+            log(string.Format(LanguageModel.Instance.Translate("ControllerConnected"), gameController.DisplayName));
+
+            settings.Mapping.Add(duplicatedMapper);
         }
 
         public void OpenWindowsGameControllerSettings()

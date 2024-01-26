@@ -10,29 +10,22 @@ namespace XOutput.UI.Component
     public partial class ControllerView : UserControl, IViewBase<ControllerViewModel, ControllerModel>
     {
         public event Action<ControllerView> RemoveClicked;
+        public event Action<ControllerView> DuplicateClicked;
 
-        protected readonly ControllerViewModel viewModel;
-        public ControllerViewModel ViewModel => viewModel;
+        public ControllerViewModel ViewModel { get; }
 
         public ControllerView(ControllerViewModel viewModel)
         {
-            this.viewModel = viewModel;
+            this.ViewModel = viewModel;
             DataContext = viewModel;
             InitializeComponent();
         }
-        private void OpenClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.Edit();
-        }
+        private void OpenClick(object sender, RoutedEventArgs e) => ViewModel.Edit();
 
-        private void ButtonClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.StartStop();
-        }
+        private void ButtonClick(object sender, RoutedEventArgs e) => ViewModel.StartStop();
 
-        private void RemoveClick(object sender, RoutedEventArgs e)
-        {
-            RemoveClicked?.Invoke(this);
-        }
+        private void RemoveClick(object sender, RoutedEventArgs e) => RemoveClicked?.Invoke(this);
+
+        private void DuplicateClick(object sender, RoutedEventArgs e) => DuplicateClicked?.Invoke(this);
     }
 }

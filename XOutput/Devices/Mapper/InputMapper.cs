@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using XOutput.Devices.Input;
 using XOutput.Devices.XInput;
@@ -37,6 +38,25 @@ namespace XOutput.Devices.Mapper
         public InputMapper()
         {
             Mappings = new Dictionary<XInputTypes, MapperDataCollection>();
+        }
+
+        public InputMapper Duplicate()
+        {
+            var mapper = new InputMapper
+            {
+                Id = Guid.NewGuid().ToString(),
+                Name = Name + " (Copy)",
+                ForceFeedbackDevice = ForceFeedbackDevice,
+                StartWhenConnected = false,
+                Mappings = new Dictionary<XInputTypes, MapperDataCollection>()
+            };
+
+            foreach (var kvPair in Mappings)
+            {
+                mapper.Mappings[kvPair.Key] = new MapperDataCollection(kvPair.Value.Mappers, kvPair.Value.CenterPoint);
+            }
+
+            return mapper;
         }
 
         public ISet<IInputDevice> GetInputs() => inputs;

@@ -7,6 +7,10 @@ namespace XOutput.Devices.Mapper
 {
     public class MapperDataCollection
     {
+        private double centerPoint = -1;
+        private double lowRange;
+        private double highRange;
+
         public List<MapperData> Mappers { get; set; }
 
         public double CenterPoint
@@ -22,10 +26,6 @@ namespace XOutput.Devices.Mapper
                 }
             }
         }
-
-        private double centerPoint = -1;
-        private double lowRange;
-        private double highRange;
 
         public MapperDataCollection() : this(new List<MapperData>(), 0)
         {
