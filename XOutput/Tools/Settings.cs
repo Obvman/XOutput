@@ -5,7 +5,6 @@ using System.Linq;
 using XOutput.Devices.Input;
 using XOutput.Devices.Mapper;
 using XOutput.Devices.XInput;
-using XOutput.Logging;
 
 namespace XOutput.Tools
 {

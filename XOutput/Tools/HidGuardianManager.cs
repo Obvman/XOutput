@@ -5,9 +5,9 @@ namespace XOutput.Tools
 {
     public class HidGuardianManager
     {
-        static readonly string PARAMETERS = "SYSTEM\\CurrentControlSet\\Services\\HidGuardian\\Parameters";
-        static readonly string WHITE_LIST = PARAMETERS + "\\Whitelist";
-        static readonly string AFFECTED_DEVICES = "AffectedDevices";
+        private static readonly string PARAMETERS = "SYSTEM\\CurrentControlSet\\Services\\HidGuardian\\Parameters";
+        private static readonly string WHITE_LIST = PARAMETERS + "\\Whitelist";
+        private static readonly string AFFECTED_DEVICES = "AffectedDevices";
 
         public void ResetPid(int pid)
         {

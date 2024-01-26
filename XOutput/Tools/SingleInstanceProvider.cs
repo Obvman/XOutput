@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using XOutput.Logging;
 
 namespace XOutput.Tools
@@ -42,9 +39,11 @@ namespace XOutput.Tools
 
         public void StartNamedPipe()
         {
-            notifyThread = new Thread(() => ReadPipe());
-            notifyThread.IsBackground = true;
-            notifyThread.Name = "XOutputRunningAlreadyNamedPipe reader";
+            notifyThread = new Thread(() => ReadPipe())
+            {
+                IsBackground = true,
+                Name = "XOutputRunningAlreadyNamedPipe reader"
+            };
             notifyThread.Start();
         }
 
@@ -78,7 +77,7 @@ namespace XOutput.Tools
                         string command = ss.ReadString();
                         ss.WriteString(ProcessCommand(command));
                     }
-                    catch(ThreadInterruptedException)
+                    catch (ThreadInterruptedException)
                     {
                         running = false;
                     }
@@ -92,7 +91,7 @@ namespace XOutput.Tools
 
         private string ProcessCommand(string request)
         {
-            if(request == ShowCommand)
+            if (request == ShowCommand)
             {
                 ShowEvent?.Invoke();
                 return OkResponse;
@@ -101,10 +100,10 @@ namespace XOutput.Tools
         }
     }
 
-    class StreamString
+    internal class StreamString
     {
-        private Stream ioStream;
-        private UnicodeEncoding streamEncoding;
+        private readonly Stream ioStream;
+        private readonly UnicodeEncoding streamEncoding;
 
         public StreamString(Stream ioStream)
         {

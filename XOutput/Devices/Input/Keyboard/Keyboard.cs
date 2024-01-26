@@ -11,6 +11,10 @@ namespace XOutput.Devices.Input.Keyboard
     /// </summary>
     public sealed class Keyboard : IInputDevice
     {
+        private readonly Thread inputRefresher;
+        private readonly KeyboardSource[] sources;
+        private readonly DeviceState state;
+
         #region Constants
         /// <summary>
         /// The delay in milliseconds to sleep between input reads.
@@ -65,14 +69,9 @@ namespace XOutput.Devices.Input.Keyboard
         /// <summary>
         /// <para>Implements <see cref="IInputDevice.InputConfiguration"/></para>
         /// </summary>
-        public InputConfig InputConfiguration => inputConfig;
+        public InputConfig InputConfiguration { get; }
         public string HardwareID => null;
         #endregion
-
-        private readonly Thread inputRefresher;
-        private readonly KeyboardSource[] sources;
-        private readonly DeviceState state;
-        private readonly InputConfig inputConfig;
 
         /// <summary>
         /// Creates a new keyboard device instance.
@@ -81,9 +80,8 @@ namespace XOutput.Devices.Input.Keyboard
         {
             sources = Enum.GetValues(typeof(Key)).OfType<Key>().Where(x => x != Key.None).OrderBy(x => x.ToString()).Select(x => new KeyboardSource(this, x.ToString(), x)).ToArray();
             state = new DeviceState(sources, 0);
-            inputConfig = new InputConfig();
-            inputRefresher = new Thread(InputRefresher);
-            inputRefresher.Name = "Keyboard input notification";
+            InputConfiguration = new InputConfig();
+            inputRefresher = new Thread(InputRefresher) { Name = "Keyboard input notification" };
             inputRefresher.SetApartmentState(ApartmentState.STA);
             inputRefresher.IsBackground = true;
             inputRefresher.Start();

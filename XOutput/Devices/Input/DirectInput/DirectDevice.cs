@@ -3,7 +3,6 @@ using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
@@ -17,13 +16,22 @@ namespace XOutput.Devices.Input.DirectInput
     /// </summary>
     public sealed class DirectDevice : IInputDevice
     {
+        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(DirectDevice));
+        private readonly DeviceInstance deviceInstance;
+        private readonly Joystick joystick;
+        private readonly DirectInputSource[] sources;
+        private readonly DeviceState state;
+        private readonly EffectInfo force;
+        private readonly List<DirectDeviceForceFeedback> actuators = new List<DirectDeviceForceFeedback>();
+        private bool connected = false;
+        private readonly Thread inputRefresher;
+        private bool disposed = false;
+
         #region Constants
         /// <summary>
         /// The delay in milliseconds to sleep between input reads.
         /// </summary>
-        public const int ReadDelayMs = 1;
-
-        private static readonly Regex hidRegex = new Regex("(hid)#([^#]+)#([^#]+)");
+        private const int ReadDelayMs = 1;
         #endregion
 
         #region Events
@@ -32,6 +40,7 @@ namespace XOutput.Devices.Input.DirectInput
         /// <para>Implements <see cref="IDevice.InputChanged"/></para>
         /// </summary>
         public event DeviceInputChangedHandler InputChanged;
+
         /// <summary>
         /// Triggered when the any read or write fails.
         /// <para>Implements <see cref="IInputDevice.Disconnected"/></para>
@@ -44,15 +53,18 @@ namespace XOutput.Devices.Input.DirectInput
         /// Gets the GUID of the controller.
         /// </summary>
         public Guid Id => deviceInstance.InstanceGuid;
+
         /// <summary>
         /// <para>Implements <see cref="IInputDevice.UniqueId"/></para>
         /// </summary>
         public string UniqueId => deviceInstance.InstanceGuid.ToString();
+
         /// <summary>
         /// Gets the product name of the device.
         /// <para>Implements <see cref="IInputDevice.DisplayName"/></para>
         /// </summary>
         public string DisplayName => deviceInstance.ProductName;
+
         /// <summary>
         /// Gets or sets if the device is connected and ready to use.
         /// <para>Implements <see cref="IInputDevice.Connected"/></para>
@@ -72,22 +84,26 @@ namespace XOutput.Devices.Input.DirectInput
                 }
             }
         }
+
         /// <summary>
         /// <para>Implements <see cref="IDevice.DPads"/></para>
         /// </summary>
         public IEnumerable<DPadDirection> DPads => state.DPads;
+
         /// <summary>
         /// <para>Implements <see cref="IDevice.Sources"/></para>
         /// </summary>
         public IEnumerable<InputSource> Sources => sources;
+
         /// <summary>
         /// <para>Implements <see cref="IInputDevice.ForceFeedbackCount"/></para>
         /// </summary>
         public int ForceFeedbackCount => actuators.Count;
+
         /// <summary>
         /// <para>Implements <see cref="IInputDevice.InputConfiguration"/></para>
         /// </summary>
-        public InputConfig InputConfiguration => inputConfig;
+        public InputConfig InputConfiguration { get; }
 
         public string HardwareID
         {
@@ -101,18 +117,6 @@ namespace XOutput.Devices.Input.DirectInput
             }
         }
         #endregion
-
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(DirectDevice));
-        private readonly DeviceInstance deviceInstance;
-        private readonly Joystick joystick;
-        private readonly DirectInputSource[] sources;
-        private readonly DeviceState state;
-        private readonly EffectInfo force;
-        private readonly List<DirectDeviceForceFeedback> actuators = new List<DirectDeviceForceFeedback>();
-        private readonly InputConfig inputConfig;
-        private bool connected = false;
-        private readonly Thread inputRefresher;
-        private bool disposed = false;
 
         /// <summary>
         /// Creates a new DirectDevice instance.
@@ -191,11 +195,8 @@ namespace XOutput.Devices.Input.DirectInput
                 logger.Info("  " + obj.Name + " " + obj.ObjectId + " offset: " + obj.Offset + " objecttype: " + obj.ObjectType.ToString() + " " + obj.Usage);
             }
             state = new DeviceState(sources, joystick.Capabilities.PovCount);
-            inputConfig = new InputConfig(ForceFeedbackCount);
-            inputRefresher = new Thread(InputRefresher)
-            {
-                Name = ToString() + " input reader"
-            };
+            InputConfiguration = new InputConfig(ForceFeedbackCount);
+            inputRefresher = new Thread(InputRefresher) { Name = ToString() + " input reader" };
             inputRefresher.SetApartmentState(ApartmentState.STA);
             inputRefresher.IsBackground = true;
             Connected = true;
@@ -229,10 +230,7 @@ namespace XOutput.Devices.Input.DirectInput
         /// <para>Overrides <see cref="object.ToString()"/></para>
         /// </summary>
         /// <returns>Friendly name</returns>
-        public override string ToString()
-        {
-            return UniqueId;
-        }
+        public override string ToString() => UniqueId;
 
         private void InputRefresher()
         {
@@ -256,10 +254,7 @@ namespace XOutput.Devices.Input.DirectInput
         /// </summary>
         /// <param name="source">Type of input</param>
         /// <returns>Value</returns>
-        public double Get(InputSource source)
-        {
-            return source.Value;
-        }
+        public double Get(InputSource source) => source.Value;
 
         /// <summary>
         /// Sets the force feedback motor values.
@@ -273,7 +268,7 @@ namespace XOutput.Devices.Input.DirectInput
             {
                 return;
             }
-            if (!inputConfig.ForceFeedback)
+            if (!InputConfiguration.ForceFeedback)
             {
                 big = 0;
                 small = 0;

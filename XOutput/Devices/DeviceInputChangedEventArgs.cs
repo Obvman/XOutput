@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace XOutput.Devices
 {
@@ -20,10 +19,12 @@ namespace XOutput.Devices
         /// Gets the changed device.
         /// </summary>
         public IDevice Device { get; }
+
         /// <summary>
         /// Gets the changed values.
         /// </summary>
         public IEnumerable<InputSource> ChangedValues { get; }
+
         /// <summary>
         /// Gets the changed DPad values.
         /// </summary>
@@ -42,19 +43,5 @@ namespace XOutput.Devices
             ChangedDPads = changedDPads;
             ChangedValues = changedValues;
         }
-
-        /// <summary>
-        /// Gets if the value of the type has changed.
-        /// </summary>
-        /// <param name="type">input type</param>
-        /// <returns></returns>
-        public bool HasValueChanged(InputSource type) => ChangedValues.Contains(type);
-
-        /// <summary>
-        /// Gets if the value of the DPad has changed.
-        /// </summary>
-        /// <param name="type">input type</param>
-        /// <returns></returns>
-        public bool HasDPadChanged(int dPadIndex) => ChangedDPads.Contains(dPadIndex);
     }
 }

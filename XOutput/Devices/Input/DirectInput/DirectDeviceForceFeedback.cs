@@ -1,11 +1,6 @@
 ﻿using SharpDX;
 using SharpDX.DirectInput;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Windows;
-using System.Windows.Interop;
 using XOutput.Logging;
 
 namespace XOutput.Devices.Input.DirectInput
@@ -19,31 +14,7 @@ namespace XOutput.Devices.Input.DirectInput
         private readonly Joystick joystick;
         private readonly EffectInfo force;
         private DeviceObjectInstance bigActuator;
-        public DeviceObjectInstance BigActuator 
-        {
-            get => bigActuator;
-            set 
-            {
-                if (bigActuator != value) 
-                {
-                    bigActuator = value;
-                    RefreshAxes();
-                }
-            }
-        }
         private DeviceObjectInstance smallActuator;
-        public DeviceObjectInstance SmallActuator 
-        {
-            get => smallActuator;
-            set 
-            {
-                if (smallActuator != value) 
-                {
-                    smallActuator = value;
-                    RefreshAxes();
-                }
-            }
-        }
         private int[] bigAxes;
         private int[] bigDirections;
         private int[] smallAxes;
@@ -53,12 +24,37 @@ namespace XOutput.Devices.Input.DirectInput
         private readonly int gain;
         private readonly int samplePeriod;
         private int axisCount;
-        
+
+        public DeviceObjectInstance BigActuator
+        {
+            get => bigActuator;
+            set
+            {
+                if (bigActuator != value)
+                {
+                    bigActuator = value;
+                    RefreshAxes();
+                }
+            }
+        }
+
+        public DeviceObjectInstance SmallActuator
+        {
+            get => smallActuator;
+            set
+            {
+                if (smallActuator != value)
+                {
+                    smallActuator = value;
+                    RefreshAxes();
+                }
+            }
+        }
+
         public DirectDeviceForceFeedback(Joystick joystick, EffectInfo force, DeviceObjectInstance actuator) : this(joystick, force, actuator, null)
         {
-            
         }
-        
+
         public DirectDeviceForceFeedback(Joystick joystick, EffectInfo force, DeviceObjectInstance bigActuator, DeviceObjectInstance smallActuator)
         {
             this.bigActuator = bigActuator;
@@ -151,7 +147,7 @@ namespace XOutput.Devices.Input.DirectInput
                 smallAxes = null;
                 smallDirections = null;
             }
-            else if (axisCount == 1) 
+            else if (axisCount == 1)
             {
                 if (smallActuator == null)
                 {
@@ -182,9 +178,6 @@ namespace XOutput.Devices.Input.DirectInput
         /// </summary>
         /// <param name="value">ratio</param>
         /// <returns>magnitude value</returns>
-        private int CalculateMagnitude(double value)
-        {
-            return (int)(gain * value);
-        }
+        private int CalculateMagnitude(double value) => (int)(gain * value);
     }
 }

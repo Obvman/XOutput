@@ -6,6 +6,8 @@ namespace XOutput.Tools
 {
     public sealed class RegistryModifier
     {
+        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(RegistryModifier));
+
         /// <summary>
         /// Startup registry key.
         /// </summary>
@@ -18,8 +20,6 @@ namespace XOutput.Tools
         /// Autostart command line parameters.
         /// </summary>
         public const string AutostartParams = " --minimized";
-
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(RegistryModifier));
 
         /// <summary>
         /// Gets or sets the autostart.

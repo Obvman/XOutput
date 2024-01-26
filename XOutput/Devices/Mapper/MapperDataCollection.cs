@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using XOutput.Devices.XInput;
 
 namespace XOutput.Devices.Mapper
@@ -11,7 +9,8 @@ namespace XOutput.Devices.Mapper
     {
         public List<MapperData> Mappers { get; set; }
 
-        public double CenterPoint {
+        public double CenterPoint
+        {
             get => centerPoint;
             set
             {
@@ -30,16 +29,14 @@ namespace XOutput.Devices.Mapper
 
         public MapperDataCollection() : this(new List<MapperData>(), 0)
         {
-
         }
+
         public MapperDataCollection(params MapperData[] data) : this(new List<MapperData>(data), 0)
         {
-
         }
 
         public MapperDataCollection(List<MapperData> mappers) : this(mappers, 0)
         {
-
         }
 
         public MapperDataCollection(List<MapperData> mappers, double centerPoint)
@@ -53,13 +50,10 @@ namespace XOutput.Devices.Mapper
         /// </summary>
         /// <param name="value">Measured data to convert</param>
         /// <returns>Mapped value</returns>
-        public double GetValue(XInputTypes type)
-        {
-            return Mappers
+        public double GetValue(XInputTypes type) => Mappers
                 .Where(m => m.Source != null)
                 .Select(m => m.GetValue(m.Source.Get(type)))
                 .Aggregate(centerPoint, (acc, v) => acc + DiffFromCenter(v));
-        }
 
         private double DiffFromCenter(double value)
         {
@@ -67,10 +61,12 @@ namespace XOutput.Devices.Mapper
             {
                 return 0;
             }
+
             if (value < centerPoint)
             {
                 return (value - centerPoint) * lowRange;
             }
+
             return (value - centerPoint) * highRange;
         }
     }

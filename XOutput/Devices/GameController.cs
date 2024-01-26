@@ -16,50 +16,53 @@ namespace XOutput.Devices
     /// </summary>
     public sealed class GameController : IDisposable
     {
+        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(GameController));
+
+        private readonly IXOutputInterface xOutputInterface;
+        private Thread thread;
+        private bool running;
+        private Nefarius.ViGEm.Client.Targets.IXbox360Controller controller;
+
         /// <summary>
         /// Gets the output device.
         /// </summary>
-        public XOutputDevice XInput => xInput;
+        public XOutputDevice XInput { get; }
+
         /// <summary>
         /// Gets the mapping of the input device.
         /// </summary>
-        public InputMapper Mapper => mapper;
+        public InputMapper Mapper { get; }
+
         /// <summary>
         /// Gets the name of the input device.
         /// </summary>
-        public string DisplayName => mapper.Name;
+        public string DisplayName => Mapper.Name;
+
         /// <summary>
         /// Gets the number of the controller.
         /// </summary>
-        public int ControllerCount => controllerCount;
+        public int ControllerCount { get; private set; } = 0;
+
         /// <summary>
         /// Gets if any XInput emulation is installed.
         /// </summary>
         public bool HasXOutputInstalled => xOutputInterface != null;
+
         /// <summary>
         /// Gets if force feedback is supported.
         /// </summary>
         public bool ForceFeedbackSupported => xOutputInterface is VigemDevice;
+
         /// <summary>
         /// Gets the force feedback device.
         /// </summary>
         public IInputDevice ForceFeedbackDevice { get; set; }
 
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(GameController));
-
-        private readonly InputMapper mapper;
-        private readonly XOutputDevice xInput;
-        private readonly IXOutputInterface xOutputInterface;
-        private Thread thread;
-        private bool running;
-        private int controllerCount = 0;
-        private Nefarius.ViGEm.Client.Targets.IXbox360Controller controller;
-
         public GameController(InputMapper mapper)
         {
-            this.mapper = mapper;
+            this.Mapper = mapper;
             xOutputInterface = CreateXOutput();
-            xInput = new XOutputDevice(mapper);
+            XInput = new XOutputDevice(mapper);
             if (!string.IsNullOrEmpty(mapper.ForceFeedbackDevice))
             {
                 var device = InputDevices.Instance.GetDevices().OfType<DirectDevice>().FirstOrDefault(d => d.UniqueId == mapper.ForceFeedbackDevice);
@@ -101,7 +104,7 @@ namespace XOutput.Devices
         public void Dispose()
         {
             Stop();
-            xInput?.Dispose();
+            XInput?.Dispose();
             xOutputInterface?.Dispose();
         }
 
@@ -114,36 +117,36 @@ namespace XOutput.Devices
             {
                 return 0;
             }
-            controllerCount = Controllers.Instance.GetId();
+            ControllerCount = Controllers.Instance.GetId();
             if (controller != null)
             {
                 controller.FeedbackReceived -= ControllerFeedbackReceived;
             }
-            if (xOutputInterface.Unplug(controllerCount))
+            if (xOutputInterface.Unplug(ControllerCount))
             {
                 // Wait for unplugging
                 Thread.Sleep(10);
             }
-            if (xOutputInterface.Plugin(controllerCount))
+            if (xOutputInterface.Plugin(ControllerCount))
             {
                 thread = new Thread(() => ReadAndReportValues(onStop));
                 running = true;
-                thread.Name = $"Emulated controller {controllerCount} output refresher";
+                thread.Name = $"Emulated controller {ControllerCount} output refresher";
                 thread.IsBackground = true;
                 thread.Start();
                 logger.Info($"Emulation started on {ToString()}.");
                 if (ForceFeedbackSupported)
                 {
                     logger.Info($"Force feedback mapping is connected on {ToString()}.");
-                    controller = ((VigemDevice)xOutputInterface).GetController(controllerCount);
+                    controller = ((VigemDevice)xOutputInterface).GetController(ControllerCount);
                     controller.FeedbackReceived += ControllerFeedbackReceived;
                 }
             }
             else
             {
-                resetId();
+                ResetId();
             }
-            return controllerCount;
+            return ControllerCount;
         }
 
         /// <summary>
@@ -160,17 +163,14 @@ namespace XOutput.Devices
                     controller.FeedbackReceived -= ControllerFeedbackReceived;
                     logger.Info($"Force feedback mapping is disconnected on {ToString()}.");
                 }
-                xOutputInterface?.Unplug(controllerCount);
+                xOutputInterface?.Unplug(ControllerCount);
                 logger.Info($"Emulation stopped on {ToString()}.");
-                resetId();
+                ResetId();
                 thread?.Interrupt();
             }
         }
 
-        public override string ToString()
-        {
-            return DisplayName;
-        }
+        public override string ToString() => DisplayName;
 
         private void ReadAndReportValues(Action onStop)
         {
@@ -195,7 +195,7 @@ namespace XOutput.Devices
 
         private void XInputInputChanged(object sender, DeviceInputChangedEventArgs e)
         {
-            if (!xOutputInterface.Report(controllerCount, XInput.GetValues()))
+            if (!xOutputInterface.Report(ControllerCount, XInput.GetValues()))
             {
                 Stop();
             }
@@ -206,12 +206,12 @@ namespace XOutput.Devices
             ForceFeedbackDevice?.SetForceFeedback((double)e.LargeMotor / byte.MaxValue, (double)e.SmallMotor / byte.MaxValue);
         }
 
-        private void resetId()
+        private void ResetId()
         {
-            if (controllerCount != 0)
+            if (ControllerCount != 0)
             {
-                Controllers.Instance.DisposeId(controllerCount);
-                controllerCount = 0;
+                Controllers.Instance.DisposeId(ControllerCount);
+                ControllerCount = 0;
             }
         }
     }

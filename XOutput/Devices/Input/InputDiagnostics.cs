@@ -9,7 +9,7 @@ namespace XOutput.Devices.Input
     /// </summary>
     public class InputDiagnostics : IDiagnostics
     {
-        protected IInputDevice device;
+        private IInputDevice device;
 
         /// <summary>
         /// Gets the source <see cref="IInputDevice"/>.

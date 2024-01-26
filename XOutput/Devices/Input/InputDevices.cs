@@ -4,16 +4,14 @@ namespace XOutput.Devices.Input
 {
     public class InputDevices
     {
+        private readonly List<IInputDevice> inputDevices = new List<IInputDevice>();
 
-        private static InputDevices instance = new InputDevices();
         /// <summary>
         /// Gets the singleton instance of the class.
         /// </summary>
-        public static InputDevices Instance => instance;
+        public static InputDevices Instance { get; } = new InputDevices();
 
-        private readonly List<IInputDevice> inputDevices = new List<IInputDevice>();
-
-        protected InputDevices()
+        private InputDevices()
         {
 
         }
@@ -30,9 +28,6 @@ namespace XOutput.Devices.Input
             Controllers.Instance.Update(inputDevices);
         }
 
-        public IEnumerable<IInputDevice> GetDevices()
-        {
-            return inputDevices.ToArray();
-        }
+        public IEnumerable<IInputDevice> GetDevices() => inputDevices.ToArray();
     }
 }

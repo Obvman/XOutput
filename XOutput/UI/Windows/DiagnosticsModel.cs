@@ -7,8 +7,7 @@ namespace XOutput.UI.Windows
 {
     public class DiagnosticsModel : ModelBase
     {
-        private readonly ObservableCollection<DiagnosticsItemView> diagnostics = new ObservableCollection<DiagnosticsItemView>();
-        public ObservableCollection<DiagnosticsItemView> Diagnostics => diagnostics;
+        public ObservableCollection<DiagnosticsItemView> Diagnostics { get; } = new ObservableCollection<DiagnosticsItemView>();
 
         public DiagnosticsModel(IEnumerable<IDiagnostics> diagnostics)
         {

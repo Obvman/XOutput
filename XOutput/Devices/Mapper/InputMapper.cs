@@ -10,18 +10,23 @@ namespace XOutput.Devices.Mapper
     /// </summary>
     public class InputMapper
     {
+        private readonly ISet<IInputDevice> inputs = new HashSet<IInputDevice>();
+
         /// <summary>
         /// Starts the mapping when connected.
         /// </summary>
         public bool StartWhenConnected { get; set; }
+
         /// <summary>
         /// Name of the mapper.
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Id of the mapper.
         /// </summary>
         public string Id { get; set; }
+
         /// <summary>
         /// Id of the force feedback device.
         /// </summary>
@@ -29,17 +34,12 @@ namespace XOutput.Devices.Mapper
 
         public Dictionary<XInputTypes, MapperDataCollection> Mappings { get; set; }
 
-        private readonly ISet<IInputDevice> inputs = new HashSet<IInputDevice>();
-
         public InputMapper()
         {
             Mappings = new Dictionary<XInputTypes, MapperDataCollection>();
         }
 
-        public ISet<IInputDevice> GetInputs()
-        {
-            return inputs;
-        }
+        public ISet<IInputDevice> GetInputs() => inputs;
 
         /// <summary>
         /// Sets the mapping for a given XInput.
@@ -47,10 +47,7 @@ namespace XOutput.Devices.Mapper
         /// <param name="type"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public void SetMapping(XInputTypes type, MapperDataCollection to)
-        {
-            Mappings[type] = to;
-        }
+        public void SetMapping(XInputTypes type, MapperDataCollection to) => Mappings[type] = to;
 
         /// <summary>
         /// Gets the mapping for a given XInput. If the mapping does not exist, returns a new mapping.
@@ -105,17 +102,6 @@ namespace XOutput.Devices.Mapper
         /// <param name="data">line read from the file</param>
         /// <param name="defaultValue">default value to be returned when no value can be read</param>
         /// <returns></returns>
-        protected static double TryReadValue(string data, double defaultValue = 0)
-        {
-            double value;
-            if (double.TryParse(data, out value))
-            {
-                return value / 100;
-            }
-            else
-            {
-                return defaultValue;
-            }
-        }
+        protected static double TryReadValue(string data, double defaultValue = 0) => double.TryParse(data, out double value) ? value / 100 : defaultValue;
     }
 }

@@ -8,8 +8,7 @@ namespace XOutput
     /// </summary>
     public sealed class LanguageModel : ModelBase
     {
-        private static LanguageModel instance = new LanguageModel();
-        public static LanguageModel Instance => instance;
+        public static LanguageModel Instance { get; } = new LanguageModel();
 
         private Dictionary<string, string> data;
         public Dictionary<string, string> Data
@@ -25,10 +24,7 @@ namespace XOutput
             }
         }
 
-        public string Translate(string key)
-        {
-            return Translate(data, key);
-        }
+        public string Translate(string key) => Translate(data, key);
 
         public static string Translate(Dictionary<string, string> translation, string key)
         {

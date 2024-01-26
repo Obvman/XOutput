@@ -6,8 +6,6 @@ namespace XOutput.Tools
 {
     public static class IdHelper
     {
-
-        private static readonly Regex idRegex = new Regex("[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}");
         private static readonly Regex hidRegex = new Regex("(hid)#([^#]+)#[^#]+");
         private static readonly Regex hidForRegistryRegex = new Regex("hid#(vid_[0-9a-f]{4}&pid_[0-9a-f]{4})[^#]*#([0-9a-f&]+)");
 

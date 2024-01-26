@@ -8,19 +8,17 @@ namespace XOutput.Devices
     /// </summary>
     public sealed class Controllers
     {
-        private static Controllers instance = new Controllers();
-        /// <summary>
-        /// Gets the singleton instance of the class.
-        /// </summary>
-        public static Controllers Instance => instance;
-
         private readonly List<int> ids = new List<int>();
         private readonly object lockObject = new object();
         private readonly List<GameController> controllers = new List<GameController>();
 
+        /// <summary>
+        /// Gets the singleton instance of the class.
+        /// </summary>
+        public static Controllers Instance { get; } = new Controllers();
+
         private Controllers()
         {
-
         }
 
         /// <summary>
@@ -81,9 +79,6 @@ namespace XOutput.Devices
             }
         }
 
-        public IEnumerable<GameController> GetControllers()
-        {
-            return controllers.ToArray();
-        }
+        public IEnumerable<GameController> GetControllers() => controllers.ToArray();
     }
 }

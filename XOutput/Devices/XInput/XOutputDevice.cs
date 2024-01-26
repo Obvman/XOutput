@@ -12,38 +12,32 @@ namespace XOutput.Devices.XInput
     /// </summary>
     public sealed class XOutputDevice : IDevice
     {
-        #region Constants
         /// <summary>
         /// XInput devices has 1 DPad.
         /// </summary>
-        public const int DPadCount = 1;
-        private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(XOutputDevice));
-        #endregion
-
-        #region Events
-        /// <summary>
-        /// This event is invoked if the data from the device was updated
-        /// <para>Implements <see cref="IDevice.InputChanged"/></para>
-        /// </summary>
-        public event DeviceInputChangedHandler InputChanged;
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// <para>Implements <see cref="IDevice.DPads"/></para>
-        /// </summary>
-        public IEnumerable<DPadDirection> DPads => dPads;
-        /// <summary>
-        /// <para>Implements <see cref="IDevice.Buttons"/></para>
-        /// </summary>
-        public IEnumerable<InputSource> Sources => sources;
-        #endregion
+        private const int DPadCount = 1;
 
         private IEnumerable<IInputDevice> boundSources = new List<IInputDevice>();
         private readonly InputMapper mapper;
         private readonly DPadDirection[] dPads = new DPadDirection[DPadCount];
         private readonly XOutputSource[] sources;
         private readonly DeviceState state;
+
+        /// <summary>
+        /// This event is invoked if the data from the device was updated
+        /// <para>Implements <see cref="IDevice.InputChanged"/></para>
+        /// </summary>
+        public event DeviceInputChangedHandler InputChanged;
+
+        /// <summary>
+        /// <para>Implements <see cref="IDevice.DPads"/></para>
+        /// </summary>
+        public IEnumerable<DPadDirection> DPads => dPads;
+
+        /// <summary>
+        /// <para>Implements <see cref="IDevice.Buttons"/></para>
+        /// </summary>
+        public IEnumerable<InputSource> Sources => sources;
 
         /// <summary>
         /// Creates a new XDevice.
@@ -91,15 +85,9 @@ namespace XOutput.Devices.XInput
         /// </summary>
         /// <param name="inputType">Type of input</param>
         /// <returns>Value</returns>
-        public double Get(InputSource source)
-        {
-            return source.Value;
-        }
+        public double Get(InputSource source) => source.Value;
 
-        private void SourceInputChanged(object sender, DeviceInputChangedEventArgs e)
-        {
-            RefreshInput();
-        }
+        private void SourceInputChanged(object sender, DeviceInputChangedEventArgs e) => RefreshInput();
 
         /// <summary>
         /// Refreshes the current state. Triggers <see cref="InputChanged"/> event.
@@ -115,6 +103,7 @@ namespace XOutput.Devices.XInput
                     state.MarkChanged(s);
                 }
             }
+
             dPads[0] = DPadHelper.GetDirection(GetBool(XInputTypes.UP), GetBool(XInputTypes.DOWN), GetBool(XInputTypes.LEFT), GetBool(XInputTypes.RIGHT));
             state.SetDPad(0, dPads[0]);
             if (state.AnyChangedDpads(force) || state.AnyChanges(force))
@@ -156,11 +145,7 @@ namespace XOutput.Devices.XInput
         public double Get(Enum inputType)
         {
             XInputTypes? type = inputType as XInputTypes?;
-            if (type.HasValue)
-            {
-                return sources.First(s => s.XInputType == type.Value).Value;
-            }
-            return 0;
+            return (type.HasValue) ? sources.First(s => s.XInputType == type.Value).Value : 0;
         }
     }
 }

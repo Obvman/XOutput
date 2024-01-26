@@ -87,14 +87,8 @@ namespace XOutput.Devices
             }
         }
 
-        public IEnumerable<InputSource> GetChanges(bool force = false)
-        {
-            return force ? Values : changedSources;
-        }
+        public IEnumerable<InputSource> GetChanges(bool force = false) => force ? Values : changedSources;
 
-        public IEnumerable<int> GetChangedDpads(bool force = false)
-        {
-            return force ? allDpads : changedDpad;
-        }
+        public IEnumerable<int> GetChangedDpads(bool force = false) => force ? allDpads : changedDpad;
     }
 }

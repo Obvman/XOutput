@@ -10,7 +10,7 @@ namespace XOutput.Logging
     /// </summary>
     public class TraceLogger : AbstractLogger
     {
-        public const string LogFile = "XOutput.log";
+        private const string LogFile = "XOutput.log";
 
         private Task currentTask;
 

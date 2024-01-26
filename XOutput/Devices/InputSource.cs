@@ -12,30 +12,37 @@ namespace XOutput.Devices
         /// This event is invoked if the data from the source was updated.
         /// </summary>
         public event SourceChangedEventHandler InputChanged;
+
         /// <summary>
         /// The display name of the source.
         /// </summary>
         public string DisplayName => name;
+
         /// <summary>
         /// The type of the source.
         /// </summary>
         public InputSourceTypes Type => type;
+
         /// <summary>
         /// The device of the source.
         /// </summary>
         public IInputDevice InputDevice => inputDevice;
+
         /// <summary>
         /// The offset of the source.
         /// </summary>
         public int Offset => offset;
+
         /// <summary>
         /// The value of the source.
         /// </summary>
         public double Value => value;
+
         /// <summary>
         /// If the input is an axis.
         /// </summary>
         public bool IsAxis => InputSourceTypes.Axis.HasFlag(type);
+
         /// <summary>
         /// If the input is a button.
         /// </summary>
@@ -55,15 +62,9 @@ namespace XOutput.Devices
             this.offset = offset;
         }
 
-        public override string ToString()
-        {
-            return name;
-        }
+        public override string ToString() => name;
 
-        protected void InvokeChange()
-        {
-            InputChanged?.Invoke(this, null);
-        }
+        protected void InvokeChange() => InputChanged?.Invoke(this, null);
 
         protected bool RefreshValue(double newValue)
         {
@@ -88,12 +89,10 @@ namespace XOutput.Devices
 
     public class DisabledInputSource : InputSource
     {
-        public static InputSource Instance => instance;
-        private static InputSource instance = new DisabledInputSource();
+        public static InputSource Instance { get; } = new DisabledInputSource();
 
         private DisabledInputSource() : base(null, "", InputSourceTypes.Disabled, 0)
         {
-
         }
     }
 }

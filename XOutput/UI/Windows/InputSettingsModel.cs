@@ -5,12 +5,9 @@ namespace XOutput.UI.Windows
 {
     public class InputSettingsModel : ModelBase
     {
-        private readonly ObservableCollection<IUpdatableView> inputAxisViews = new ObservableCollection<IUpdatableView>();
-        public ObservableCollection<IUpdatableView> InputAxisViews => inputAxisViews;
-        private readonly ObservableCollection<IUpdatableView> inputDPadViews = new ObservableCollection<IUpdatableView>();
-        public ObservableCollection<IUpdatableView> InputDPadViews => inputDPadViews;
-        private readonly ObservableCollection<IUpdatableView> inputButtonViews = new ObservableCollection<IUpdatableView>();
-        public ObservableCollection<IUpdatableView> InputButtonViews => inputButtonViews;
+        public ObservableCollection<IUpdatableView> InputAxisViews { get; } = new ObservableCollection<IUpdatableView>();
+        public ObservableCollection<IUpdatableView> InputDPadViews { get; } = new ObservableCollection<IUpdatableView>();
+        public ObservableCollection<IUpdatableView> InputButtonViews { get; } = new ObservableCollection<IUpdatableView>();
 
 
         private string title;

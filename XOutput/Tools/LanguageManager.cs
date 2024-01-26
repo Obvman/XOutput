@@ -1,12 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Resources;
 using XOutput.Logging;
 
 namespace XOutput.Tools
@@ -16,22 +13,21 @@ namespace XOutput.Tools
     /// </summary>
     public sealed class LanguageManager
     {
-        private readonly Dictionary<string, Dictionary<string, string>> data = new Dictionary<string, Dictionary<string, string>>();
-
         private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(LanguageManager));
-        private static LanguageManager instance = new LanguageManager();
+        private readonly Dictionary<string, Dictionary<string, string>> data = new Dictionary<string, Dictionary<string, string>>();
+        private string language;
+
         /// <summary>
         /// Gets the singleton instance of the class.
         /// </summary>
-        public static LanguageManager Instance => instance;
+        public static LanguageManager Instance { get; } = new LanguageManager();
 
-        private string language;
         /// <summary>
         /// Gets or sets the current language.
         /// </summary>
         public string Language
         {
-            get { return language; }
+            get => language;
             set
             {
                 var v = value;
@@ -52,7 +48,8 @@ namespace XOutput.Tools
         {
             var assembly = Assembly.GetExecutingAssembly();
             var serializer = new JsonSerializer();
-            foreach (var resourceName in assembly.GetManifestResourceNames().Where(s => s.StartsWith(assembly.GetName().Name + ".Resources.Languages.", StringComparison.CurrentCultureIgnoreCase))) {
+            foreach (var resourceName in assembly.GetManifestResourceNames().Where(s => s.StartsWith(assembly.GetName().Name + ".Resources.Languages.", StringComparison.CurrentCultureIgnoreCase)))
+            {
                 string resourceKey = resourceName.Split('.')[3];
                 using (var stream = new JsonTextReader(new StreamReader(assembly.GetManifestResourceStream(resourceName))))
                 {
@@ -67,9 +64,6 @@ namespace XOutput.Tools
         /// Gets the available languages.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<string> GetLanguages()
-        {
-            return data.Keys;
-        }
+        public IEnumerable<string> GetLanguages() => data.Keys;
     }
 }

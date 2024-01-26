@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using XOutput.Logging;
 
@@ -10,21 +9,11 @@ namespace XOutput.Tools
     {
         private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(DependencyEmbedder));
 
-        private static DependencyEmbedder instance = new DependencyEmbedder();
-        /// <summary>
-        /// Gets the singleton instance of the class.
-        /// </summary>
-        public static DependencyEmbedder Instance => instance;
-        private List<KeyValuePair<string, string>> packages = new List<KeyValuePair<string, string>>();
+        private readonly List<KeyValuePair<string, string>> packages = new List<KeyValuePair<string, string>>();
 
-        public void AddPackage(string package)
-        {
-            AddPackage(package, package);
-        }
-        public void AddPackage(string package, string dllFile)
-        {
-            packages.Add(new KeyValuePair<string, string>(package, dllFile));
-        }
+        public void AddPackage(string package) => AddPackage(package, package);
+
+        public void AddPackage(string package, string dllFile) => packages.Add(new KeyValuePair<string, string>(package, dllFile));
 
         public void Initialize()
         {

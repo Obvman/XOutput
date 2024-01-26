@@ -6,24 +6,18 @@ namespace XOutput.UI.Windows
 {
     public class ControllerSettingsModel : ModelBase
     {
-        private readonly ObservableCollection<MappingView> mapperAxisViews = new ObservableCollection<MappingView>();
-        public ObservableCollection<MappingView> MapperAxisViews => mapperAxisViews;
-        private readonly ObservableCollection<MappingView> mapperDPadViews = new ObservableCollection<MappingView>();
-        public ObservableCollection<MappingView> MapperDPadViews => mapperDPadViews;
-        private readonly ObservableCollection<MappingView> mapperButtonViews = new ObservableCollection<MappingView>();
-        public ObservableCollection<MappingView> MapperButtonViews => mapperButtonViews;
-
-        private readonly ObservableCollection<IUpdatableView> xInputAxisViews = new ObservableCollection<IUpdatableView>();
-        public ObservableCollection<IUpdatableView> XInputAxisViews => xInputAxisViews;
-        private readonly ObservableCollection<IUpdatableView> xInputDPadViews = new ObservableCollection<IUpdatableView>();
-        public ObservableCollection<IUpdatableView> XInputDPadViews => xInputDPadViews;
-        private readonly ObservableCollection<IUpdatableView> xInputButtonViews = new ObservableCollection<IUpdatableView>();
-        public ObservableCollection<IUpdatableView> XInputButtonViews => xInputButtonViews;
-
-        private readonly ObservableCollection<ComboBoxItem> forceFeedbacks = new ObservableCollection<ComboBoxItem>();
-        public ObservableCollection<ComboBoxItem> ForceFeedbacks => forceFeedbacks;
-
         private ComboBoxItem forceFeedback;
+        private string title;
+        private bool startWhenConnected;
+
+        public ObservableCollection<MappingView> MapperAxisViews { get; } = new ObservableCollection<MappingView>();
+        public ObservableCollection<MappingView> MapperDPadViews { get; } = new ObservableCollection<MappingView>();
+        public ObservableCollection<MappingView> MapperButtonViews { get; } = new ObservableCollection<MappingView>();
+        public ObservableCollection<IUpdatableView> XInputAxisViews { get; } = new ObservableCollection<IUpdatableView>();
+        public ObservableCollection<IUpdatableView> XInputDPadViews { get; } = new ObservableCollection<IUpdatableView>();
+        public ObservableCollection<IUpdatableView> XInputButtonViews { get; } = new ObservableCollection<IUpdatableView>();
+        public ObservableCollection<ComboBoxItem> ForceFeedbacks { get; } = new ObservableCollection<ComboBoxItem>();
+
         public ComboBoxItem ForceFeedback
         {
             get => forceFeedback;
@@ -37,7 +31,6 @@ namespace XOutput.UI.Windows
             }
         }
 
-        private string title;
         public string Title
         {
             get => title;
@@ -51,7 +44,6 @@ namespace XOutput.UI.Windows
             }
         }
 
-        private bool startWhenConnected;
         public bool StartWhenConnected
         {
             get => startWhenConnected;

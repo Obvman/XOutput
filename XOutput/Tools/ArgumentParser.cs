@@ -12,22 +12,21 @@ namespace XOutput.Tools
     {
         private static readonly ILogger logger = LoggerFactory.GetLogger(typeof(ArgumentParser));
 
-        private readonly bool minimized;
         /// <summary>
         /// Gets if the application should start in silent mode.
         /// </summary>
-        public bool Minimized => minimized;
+        public bool Minimized { get; }
 
         public ArgumentParser() : this(Environment.GetCommandLineArgs().Skip(1).ToArray())
         {
-            
+
         }
 
         public ArgumentParser(IEnumerable<string> arguments)
         {
             var args = arguments.ToList();
-            minimized = args.Any(arg => arg == "--minimized");
-            if (minimized)
+            Minimized = args.Any(arg => arg == "--minimized");
+            if (Minimized)
             {
                 args.Remove("--minimized");
             }

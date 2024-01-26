@@ -25,9 +25,11 @@ namespace XOutput.UI.Windows
             var devices = InputDevices.Instance.GetDevices().OfType<DirectDevice>().ToArray();
             foreach (var device in devices)
             {
-                var item = new ComboBoxItem();
-                item.Tag = device;
-                item.Content = new TextBlock(new Run(device.DisplayName));
+                var item = new ComboBoxItem
+                {
+                    Tag = device,
+                    Content = new TextBlock(new Run(device.DisplayName))
+                };
                 Model.ForceFeedbacks.Add(item);
                 if (!string.IsNullOrEmpty(controller.Mapper.ForceFeedbackDevice) && controller.Mapper.ForceFeedbackDevice == device.UniqueId)
                 {

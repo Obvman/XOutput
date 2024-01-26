@@ -7,22 +7,19 @@ namespace XOutput.Devices.XInput
     /// </summary>
     public class XOutputSource : InputSource
     {
-        public XInputTypes XInputType => inputType;
-
-        private readonly XInputTypes inputType;
-
+        public XInputTypes XInputType { get; }
 
         public XOutputSource(string name, XInputTypes type) : base(null, name, type.GetInputSourceType(), 0)
         {
-            inputType = type;
+            XInputType = type;
         }
 
         internal bool Refresh(InputMapper mapper)
         {
-            var mappingCollection = mapper.GetMapping(inputType);
+            var mappingCollection = mapper.GetMapping(XInputType);
             if (mappingCollection != null)
             {
-                double newValue = mappingCollection.GetValue(inputType);
+                double newValue = mappingCollection.GetValue(XInputType);
                 return RefreshValue(newValue);
             }
             return false;

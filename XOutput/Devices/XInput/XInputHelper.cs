@@ -9,53 +9,51 @@ namespace XOutput.Devices.XInput
     /// </summary>
     public class XInputHelper
     {
-        protected static readonly XInputHelper instance = new XInputHelper();
         /// <summary>
         /// Gets the singleton instance of the class.
         /// </summary>
-        public static XInputHelper Instance => instance;
+        public static XInputHelper Instance { get; } = new XInputHelper();
+
         /// <summary>
         /// Gets the all values from the enum.
         /// </summary>
-        public IEnumerable<XInputTypes> Values => values;
+        public IEnumerable<XInputTypes> Values { get; }
+
         /// <summary>
         /// Gets all button values.
         /// </summary>
-        public IEnumerable<XInputTypes> Buttons => buttons;
+        public IEnumerable<XInputTypes> Buttons { get; }
+
         /// <summary>
         /// Gets all axis values.
         /// </summary>
-        public IEnumerable<XInputTypes> Axes => axes;
+        public IEnumerable<XInputTypes> Axes { get; }
+
         /// <summary>
         /// Gets all axis values.
         /// </summary>
-        public IEnumerable<XInputTypes> Sliders => sliders;
+        public IEnumerable<XInputTypes> Sliders { get; }
+
         /// <summary>
         /// Gets all dpad values.
         /// </summary>
-        public IEnumerable<XInputTypes> DPad => dPad;
-
-        private readonly IEnumerable<XInputTypes> values;
-        private readonly IEnumerable<XInputTypes> buttons;
-        private readonly IEnumerable<XInputTypes> axes;
-        private readonly IEnumerable<XInputTypes> dPad;
-        private readonly IEnumerable<XInputTypes> sliders;
+        public IEnumerable<XInputTypes> DPad { get; }
 
         public XInputHelper()
         {
-            values = Enum.GetValues(typeof(XInputTypes)).OfType<XInputTypes>().Distinct().ToArray();
-            buttons = values.Where(v => IsButton(v)).ToArray();
-            axes = values.Where(v => IsAxis(v)).ToArray();
-            dPad = values.Where(v => IsDPad(v)).ToArray();
-            sliders = values.Where(v => IsSlider(v)).ToArray();
+            Values = Enum.GetValues(typeof(XInputTypes)).OfType<XInputTypes>().Distinct().ToArray();
+            Buttons = Values.Where(v => IsButton(v)).ToArray();
+            Axes = Values.Where(v => IsAxis(v)).ToArray();
+            DPad = Values.Where(v => IsDPad(v)).ToArray();
+            Sliders = Values.Where(v => IsSlider(v)).ToArray();
         }
 
         public XOutputSource[] GenerateSources()
         {
-            var buttonSources = buttons.Select(b => new XOutputSource(b.ToString(), b));
-            var axisSources = axes.Select(a => new XOutputSource(a.ToString(), a));
-            var dpadSources = dPad.Select(d => new XOutputSource(d.ToString(), d));
-            var sliderSources = sliders.Select(d => new XOutputSource(d.ToString(), d));
+            var buttonSources = Buttons.Select(b => new XOutputSource(b.ToString(), b));
+            var axisSources = Axes.Select(a => new XOutputSource(a.ToString(), a));
+            var dpadSources = DPad.Select(d => new XOutputSource(d.ToString(), d));
+            var sliderSources = Sliders.Select(d => new XOutputSource(d.ToString(), d));
             return buttonSources.Concat(axisSources).Concat(dpadSources).Concat(sliderSources).ToArray();
         }
 
@@ -168,31 +166,17 @@ namespace XOutput.Devices.XInput
     /// Extension helper class for <see cref="XInputTypes"/>.
     /// It proxies all calls to <see cref="XInputHelper.Instance"/>.
     /// </summary>
-    public static class XInputExtension
+    public static class XInputExtensions
     {
-        public static bool IsAxis(this XInputTypes input)
-        {
-            return XInputHelper.Instance.IsAxis(input);
-        }
+        public static bool IsAxis(this XInputTypes input) => XInputHelper.Instance.IsAxis(input);
 
-        public static bool IsDPad(this XInputTypes input)
-        {
-            return XInputHelper.Instance.IsDPad(input);
-        }
+        public static bool IsDPad(this XInputTypes input) => XInputHelper.Instance.IsDPad(input);
 
-        public static bool IsButton(this XInputTypes input)
-        {
-            return XInputHelper.Instance.IsButton(input);
-        }
-        public static bool IsSlider(this XInputTypes input)
-        {
-            return XInputHelper.Instance.IsSlider(input);
-        }
+        public static bool IsButton(this XInputTypes input) => XInputHelper.Instance.IsButton(input);
 
-        public static double GetDisableValue(this XInputTypes input)
-        {
-            return XInputHelper.Instance.GetDisableValue(input);
-        }
+        public static bool IsSlider(this XInputTypes input) => XInputHelper.Instance.IsSlider(input);
+
+        public static double GetDisableValue(this XInputTypes input) => XInputHelper.Instance.GetDisableValue(input);
 
         public static InputSourceTypes GetInputSourceType(this XInputTypes input)
         {

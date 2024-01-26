@@ -5,7 +5,9 @@ namespace XOutput.UI.Windows
 {
     public class MainWindowModel : ModelBase
     {
+        private bool isAdmin;
         private Tools.Settings settings;
+
         public Tools.Settings Settings
         {
             get => settings;
@@ -19,8 +21,7 @@ namespace XOutput.UI.Windows
             }
         }
 
-        private readonly ObservableCollection<InputView> inputs = new ObservableCollection<InputView>();
-        public ObservableCollection<InputView> Inputs { get { return inputs; } }
+        public ObservableCollection<InputView> Inputs { get; } = new ObservableCollection<InputView>();
 
         public bool AllDevices
         {
@@ -35,7 +36,6 @@ namespace XOutput.UI.Windows
             }
         }
 
-        private bool isAdmin;
         public bool IsAdmin
         {
             get => isAdmin;
@@ -49,7 +49,6 @@ namespace XOutput.UI.Windows
             }
         }
 
-        private readonly ObservableCollection<ControllerView> controllers = new ObservableCollection<ControllerView>();
-        public ObservableCollection<ControllerView> Controllers { get { return controllers; } }
+        public ObservableCollection<ControllerView> Controllers { get; } = new ObservableCollection<ControllerView>();
     }
 }

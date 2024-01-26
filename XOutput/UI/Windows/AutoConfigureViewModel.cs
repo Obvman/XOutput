@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using XOutput.Devices;
 using XOutput.Devices.Input;
@@ -82,7 +81,7 @@ namespace XOutput.UI.Windows
         /// </summary>
         private void ReadValues(object sender, DeviceInputChangedEventArgs e)
         {
-            if(e.Device is Mouse && (IsMouseOverButtons?.Invoke() ?? false))
+            if (e.Device is Mouse && (IsMouseOverButtons?.Invoke() ?? false))
             {
                 return;
             }

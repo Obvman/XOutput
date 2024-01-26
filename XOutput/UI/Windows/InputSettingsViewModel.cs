@@ -36,12 +36,10 @@ namespace XOutput.UI.Windows
 
         public void Update()
         {
-            if (!device.Connected)
+            if (device.Connected)
             {
-                return;
+                UpdateInputControls();
             }
-
-            UpdateInputControls();
         }
 
         public void TestForceFeedback()
