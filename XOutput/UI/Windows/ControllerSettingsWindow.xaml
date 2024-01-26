@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XOutput.UI.Windows"
         mc:Ignorable="d"
-        Title="{Binding Model.Title}" Width="1200" Height="850" MinWidth="1010"
+        Title="{Binding Model.Title}" Width="1200" Height="920" MinWidth="1010"
         d:DataContext="{d:DesignInstance Type=local:ControllerSettingsViewModel, IsDesignTimeCreatable=False}"
         Loaded="WindowLoaded">
     <Grid>
