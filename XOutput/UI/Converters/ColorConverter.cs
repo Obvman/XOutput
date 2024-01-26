@@ -142,14 +142,8 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
 
-        protected static Brush CreateBrush(byte r, byte g, byte b)
-        {
-            return new SolidColorBrush(Color.FromRgb(r, g, b));
-        }
+        protected static Brush CreateBrush(byte r, byte g, byte b) => new SolidColorBrush(Color.FromRgb(r, g, b));
     }
 }

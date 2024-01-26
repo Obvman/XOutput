@@ -7,53 +7,29 @@ namespace XOutput.UI
     public static class UIConfiguration
     {
         [ResolverMethod(false)]
-        public static MainWindowModel GetMainWindowModel()
-        {
-            return new MainWindowModel();
-        }
+        public static MainWindowModel GetMainWindowModel() => new MainWindowModel();
 
         [ResolverMethod(false)]
-        public static MainWindowViewModel GetMainWindowViewModel(MainWindowModel model, Dispatcher dispatcher, HidGuardianManager hidGuardianManager)
-        {
-            return new MainWindowViewModel(model, dispatcher, hidGuardianManager);
-        }
+        public static MainWindowViewModel GetMainWindowViewModel(MainWindowModel model, Dispatcher dispatcher, HidGuardianManager hidGuardianManager) => new MainWindowViewModel(model, dispatcher, hidGuardianManager);
 
         [ResolverMethod(false)]
-        public static MainWindow GetMainWindow(MainWindowViewModel viewModel, ArgumentParser argumentParser)
-        {
-            return new MainWindow(viewModel, argumentParser);
-        }
+        public static MainWindow GetMainWindow(MainWindowViewModel viewModel, ArgumentParser argumentParser) => new MainWindow(viewModel, argumentParser);
 
 
         [ResolverMethod(false)]
-        public static SettingsModel GetSettingsModel(RegistryModifier registryModifier, Settings settings)
-        {
-            return new SettingsModel(registryModifier, settings);
-        }
+        public static SettingsModel GetSettingsModel(RegistryModifier registryModifier, Settings settings) => new SettingsModel(registryModifier, settings);
 
         [ResolverMethod(false)]
-        public static SettingsViewModel GetSettingsViewModel(SettingsModel model)
-        {
-            return new SettingsViewModel(model);
-        }
+        public static SettingsViewModel GetSettingsViewModel(SettingsModel model) => new SettingsViewModel(model);
 
         [ResolverMethod(false)]
-        public static SettingsWindow GetSettingsWindow(SettingsViewModel viewModel)
-        {
-            return new SettingsWindow(viewModel);
-        }
+        public static SettingsWindow GetSettingsWindow(SettingsViewModel viewModel) => new SettingsWindow(viewModel);
 
 
         [ResolverMethod(false)]
-        public static DiagnosticsViewModel GetDiagnosticsViewModel(DiagnosticsModel model)
-        {
-            return new DiagnosticsViewModel(model);
-        }
+        public static DiagnosticsViewModel GetDiagnosticsViewModel(DiagnosticsModel model) => new DiagnosticsViewModel(model);
 
         [ResolverMethod(false)]
-        public static DiagnosticsWindow GetDiagnosticsWindow(DiagnosticsViewModel viewModel)
-        {
-            return new DiagnosticsWindow(viewModel);
-        }
+        public static DiagnosticsWindow GetDiagnosticsWindow(DiagnosticsViewModel viewModel) => new DiagnosticsWindow(viewModel);
     }
 }

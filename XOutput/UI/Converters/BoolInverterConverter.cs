@@ -17,10 +17,7 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Invert(value as bool?);
-        }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => Invert(value as bool?);
 
         /// <summary>
         /// Inverts the bool value.
@@ -30,21 +27,8 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return Invert(value as bool?);
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => Invert(value as bool?);
 
-        protected bool Invert(bool? b)
-        {
-            if (b.HasValue)
-            {
-                return !(b.Value);
-            }
-            else
-            {
-                throw new ArgumentException(nameof(b));
-            }
-        }
+        private bool Invert(bool? b) => b.HasValue ? !b.Value : throw new ArgumentException(nameof(b));
     }
 }

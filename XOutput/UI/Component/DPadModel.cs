@@ -4,60 +4,17 @@ namespace XOutput.UI.Component
 {
     public class DPadModel : ModelBase
     {
-        private DPadDirection direction;
-        public DPadDirection Direction
-        {
-            get => direction;
-            set
-            {
-                if (direction != value)
-                {
-                    direction = value;
-                    OnPropertyChanged(nameof(Direction));
-                }
-            }
-        }
+        private DPadDirection _direction;
+        private int _valueX;
+        private int _valueY;
+        private string _label;
 
-        private int valuex;
-        public int ValueX
-        {
-            get => valuex;
-            set
-            {
-                if (valuex != value)
-                {
-                    valuex = value;
-                    OnPropertyChanged(nameof(ValueX));
-                }
-            }
-        }
+        public DPadDirection Direction { get => _direction; set => SetProperty(ref _direction, value); }
 
-        private int valuey;
-        public int ValueY
-        {
-            get => valuey;
-            set
-            {
-                if (valuey != value)
-                {
-                    valuey = value;
-                    OnPropertyChanged(nameof(ValueY));
-                }
-            }
-        }
+        public int ValueX { get => _valueX; set => SetProperty(ref _valueX, value); }
 
-        private string label;
-        public string Label
-        {
-            get => label;
-            set
-            {
-                if (label != value)
-                {
-                    label = value;
-                    OnPropertyChanged(nameof(Label));
-                }
-            }
-        }
+        public int ValueY { get => _valueY; set => SetProperty(ref _valueY, value); }
+
+        public string Label { get => _label; set => SetProperty(ref _label, value); }
     }
 }

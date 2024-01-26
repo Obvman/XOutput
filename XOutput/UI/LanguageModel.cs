@@ -8,23 +8,13 @@ namespace XOutput
     /// </summary>
     public sealed class LanguageModel : ModelBase
     {
+        private Dictionary<string, string> _data;
+
         public static LanguageModel Instance { get; } = new LanguageModel();
 
-        private Dictionary<string, string> data;
-        public Dictionary<string, string> Data
-        {
-            get => data;
-            set
-            {
-                if (data != value)
-                {
-                    data = value;
-                    OnPropertyChanged(nameof(Data));
-                }
-            }
-        }
+        public Dictionary<string, string> Data { get => _data; set => SetProperty(ref _data, value); }
 
-        public string Translate(string key) => Translate(data, key);
+        public string Translate(string key) => Translate(_data, key);
 
         public static string Translate(Dictionary<string, string> translation, string key)
         {

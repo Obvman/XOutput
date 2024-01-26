@@ -6,93 +6,35 @@ namespace XOutput.UI.Windows
 {
     public class AutoConfigureModel : ModelBase
     {
-        private XInputTypes xInput;
-        public XInputTypes XInput
-        {
-            get => xInput;
-            set { if (xInput != value) { xInput = value; OnPropertyChanged(nameof(XInput)); } }
-        }
-        private bool isAuto = true;
-        public bool IsAuto
-        {
-            get => isAuto;
-            set { if (isAuto != value) { isAuto = value; OnPropertyChanged(nameof(IsAuto)); if (value) { MaxType = null; } } }
-        }
-        private bool highlight;
-        public bool Highlight
-        {
-            get => highlight;
-            set { if (highlight != value) { highlight = value; OnPropertyChanged(nameof(Highlight)); } }
-        }
-        private InputSource maxType;
-        public InputSource MaxType
-        {
-            get => maxType;
-            set { if (maxType != value) { maxType = value; OnPropertyChanged(nameof(MaxType)); } }
-        }
-        private double minValue;
-        public double MinValue
-        {
-            get => minValue;
-            set { if (minValue != value) { minValue = value; OnPropertyChanged(nameof(MinValue)); } }
-        }
-        private double maxValue;
-        public double MaxValue
-        {
-            get => maxValue;
-            set { if (maxValue != value) { maxValue = value; OnPropertyChanged(nameof(MaxValue)); } }
-        }
-        private Visibility buttonsVisibility;
-        public Visibility ButtonsVisibility
-        {
-            get => buttonsVisibility;
-            set
-            {
-                if (buttonsVisibility != value)
-                {
-                    buttonsVisibility = value;
-                    OnPropertyChanged(nameof(ButtonsVisibility));
-                }
-            }
-        }
-        private double timerMaxValue;
-        public double TimerMaxValue
-        {
-            get => timerMaxValue;
-            set
-            {
-                if (timerMaxValue != value)
-                {
-                    timerMaxValue = value;
-                    OnPropertyChanged(nameof(TimerMaxValue));
-                }
-            }
-        }
-        private double timerValue;
-        public double TimerValue
-        {
-            get => timerValue;
-            set
-            {
-                if (timerValue != value)
-                {
-                    timerValue = value;
-                    OnPropertyChanged(nameof(TimerValue));
-                }
-            }
-        }
-        private Visibility timerVisibility;
-        public Visibility TimerVisibility
-        {
-            get => timerVisibility;
-            set
-            {
-                if (timerVisibility != value)
-                {
-                    timerVisibility = value;
-                    OnPropertyChanged(nameof(TimerVisibility));
-                }
-            }
-        }
+        private XInputTypes _xInput;
+        private bool _isAuto = true;
+        private bool _highlight;
+        private InputSource _maxType;
+        private double _minValue;
+        private double _maxValue;
+        private Visibility _buttonsVisibility;
+        private double _timerMaxValue;
+        private double _timerValue;
+        private Visibility _timerVisibility;
+
+        public XInputTypes XInput { get => _xInput; set => SetProperty(ref _xInput, value); }
+
+        public bool IsAuto { get => _isAuto; set => SetProperty(ref _isAuto, value); }
+
+        public bool Highlight { get => _highlight; set => SetProperty(ref _highlight, value); }
+
+        public InputSource MaxType { get => _maxType; set => SetProperty(ref _maxType, value); }
+
+        public double MinValue { get => _minValue; set => SetProperty(ref _minValue, value); }
+
+        public double MaxValue { get => _maxValue; set => SetProperty(ref _maxValue, value); }
+
+        public Visibility ButtonsVisibility { get => _buttonsVisibility; set => SetProperty(ref _buttonsVisibility, value); }
+
+        public double TimerMaxValue { get => _timerMaxValue; set => SetProperty(ref _timerMaxValue, value); }
+
+        public double TimerValue { get => _timerValue; set => SetProperty(ref _timerValue, value); }
+
+        public Visibility TimerVisibility { get => _timerVisibility; set => SetProperty(ref _timerVisibility, value); }
     }
 }

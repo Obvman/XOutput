@@ -5,7 +5,7 @@ namespace XOutput.UI.Windows
 {
     public class MainWindowModel : ModelBase
     {
-        private bool isAdmin;
+        private bool _isAdmin;
         private Tools.Settings settings;
 
         public Tools.Settings Settings
@@ -36,18 +36,7 @@ namespace XOutput.UI.Windows
             }
         }
 
-        public bool IsAdmin
-        {
-            get => isAdmin;
-            set
-            {
-                if (isAdmin != value)
-                {
-                    isAdmin = value;
-                    OnPropertyChanged(nameof(IsAdmin));
-                }
-            }
-        }
+        public bool IsAdmin { get => _isAdmin; set => SetProperty(ref _isAdmin, value); }
 
         public ObservableCollection<ControllerView> Controllers { get; } = new ObservableCollection<ControllerView>();
     }

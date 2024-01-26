@@ -5,75 +5,23 @@ namespace XOutput.UI.Component
 {
     public class ControllerModel : ModelBase
     {
-        private GameController controller;
-        public GameController Controller
-        {
-            get => controller;
-            set
-            {
-                if (controller != value)
-                {
-                    controller = value;
-                    OnPropertyChanged(nameof(Controller));
-                }
-            }
-        }
+        private GameController _controller;
+        private string _buttonText;
+        private bool _started;
+        private bool _canStart;
+        private Brush _background;
 
-        private string buttonText;
-        public string ButtonText
-        {
-            get => buttonText;
-            set
-            {
-                if (buttonText != value)
-                {
-                    buttonText = value;
-                    OnPropertyChanged(nameof(ButtonText));
-                }
-            }
-        }
-        private bool started;
-        public bool Started
-        {
-            get => started;
-            set
-            {
-                if (started != value)
-                {
-                    started = value;
-                    OnPropertyChanged(nameof(Started));
-                }
-            }
-        }
+        public GameController Controller { get => _controller; set => SetProperty(ref _controller, value); }
 
-        private bool canStart;
-        public bool CanStart
-        {
-            get => canStart;
-            set
-            {
-                if (canStart != value)
-                {
-                    canStart = value;
-                    OnPropertyChanged(nameof(CanStart));
-                }
-            }
-        }
+        public string ButtonText { get => _buttonText; set => SetProperty(ref _buttonText, value); }
 
-        private Brush background;
-        public Brush Background
-        {
-            get => background;
-            set
-            {
-                if (background != value)
-                {
-                    background = value;
-                    OnPropertyChanged(nameof(Background));
-                }
-            }
-        }
-        public string DisplayName { get { return Controller.ToString(); } }
+        public bool Started { get => _started; set => SetProperty(ref _started, value); }
+
+        public bool CanStart { get => _canStart; set => SetProperty(ref _canStart, value); }
+
+        public Brush Background { get => _background; set => SetProperty(ref _background, value); }
+
+        public string DisplayName { get => Controller.ToString(); }
 
         public void RefreshName()
         {

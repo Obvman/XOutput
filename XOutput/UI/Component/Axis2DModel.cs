@@ -4,63 +4,20 @@ namespace XOutput.UI.Component
 {
     public class Axis2DModel : ModelBase
     {
+        private int _valueX;
+        private int _valueY;
+        private int _maxX;
+        private int _maxY;
+
         public InputSource TypeX { get; set; }
         public InputSource TypeY { get; set; }
 
-        private int valuex;
-        public int ValueX
-        {
-            get => valuex;
-            set
-            {
-                if (valuex != value)
-                {
-                    valuex = value;
-                    OnPropertyChanged(nameof(ValueX));
-                }
-            }
-        }
+        public int ValueX { get => _valueX; set => SetProperty(ref _valueX, value); }
 
-        private int valuey;
-        public int ValueY
-        {
-            get => valuey;
-            set
-            {
-                if (valuey != value)
-                {
-                    valuey = value;
-                    OnPropertyChanged(nameof(ValueY));
-                }
-            }
-        }
+        public int ValueY { get => _valueY; set => SetProperty(ref _valueY, value); }
 
-        private int maxx;
-        public int MaxX
-        {
-            get => maxx;
-            set
-            {
-                if (maxx != value)
-                {
-                    maxx = value;
-                    OnPropertyChanged(nameof(MaxX));
-                }
-            }
-        }
+        public int MaxX { get => _maxX; set => SetProperty(ref _maxX, value); }
 
-        private int maxy;
-        public int MaxY
-        {
-            get => maxy;
-            set
-            {
-                if (maxy != value)
-                {
-                    maxy = value;
-                    OnPropertyChanged(nameof(MaxY));
-                }
-            }
-        }
+        public int MaxY { get => _maxY; set => SetProperty(ref _maxY, value); }
     }
 }

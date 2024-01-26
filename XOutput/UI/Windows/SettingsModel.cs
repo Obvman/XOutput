@@ -7,11 +7,10 @@ namespace XOutput.UI.Windows
     {
         private readonly Settings settings;
         private readonly RegistryModifier registryModifier;
-
-        private readonly ObservableCollection<string> languages = new ObservableCollection<string>();
-        public ObservableCollection<string> Languages => languages;
-
         private string selectedLanguage;
+
+        public ObservableCollection<string> Languages { get; } = new ObservableCollection<string>();
+
         public string SelectedLanguage
         {
             get

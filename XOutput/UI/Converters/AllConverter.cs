@@ -20,12 +20,10 @@ namespace XOutput.UI.Converters
         /// <returns></returns>
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            foreach (var v in values)
+            foreach (var valObj in values)
             {
-                if (!(v is bool) || !((bool)v))
-                {
+                if (!(valObj is bool val) || !val)
                     return false;
-                }
             }
             return true;
         }
@@ -38,9 +36,6 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

@@ -21,14 +21,7 @@ namespace XOutput.UI.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             decimal? d = value as decimal?;
-            if (d.HasValue)
-            {
-                return d.Value.ToString("0");
-            }
-            else
-            {
-                return "";
-            }
+            return d.HasValue ? d.Value.ToString("0") : (object)"";
         }
 
         /// <summary>
@@ -39,9 +32,6 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

@@ -18,10 +18,7 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns>If the value is not null</returns>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value != null;
-        }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value != null;
 
         /// <summary>
         /// Intentionally not implemented.
@@ -31,9 +28,6 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

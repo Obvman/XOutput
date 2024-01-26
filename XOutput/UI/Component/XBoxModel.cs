@@ -4,32 +4,11 @@ namespace XOutput.UI
 {
     public class XBoxModel : ModelBase
     {
-        private XInputTypes xInputType;
-        public XInputTypes XInputType
-        {
-            get => xInputType;
-            set
-            {
-                if (xInputType != value)
-                {
-                    xInputType = value;
-                    OnPropertyChanged(nameof(XInputType));
-                }
-            }
-        }
+        private XInputTypes _xInputType;
+        private bool _highlight;
 
-        private bool highlight;
-        public bool Highlight
-        {
-            get => highlight;
-            set
-            {
-                if (highlight != value)
-                {
-                    highlight = value;
-                    OnPropertyChanged(nameof(Highlight));
-                }
-            }
-        }
+        public XInputTypes XInputType { get => _xInputType; set => SetProperty(ref _xInputType, value); }
+
+        public bool Highlight { get => _highlight; set => SetProperty(ref _highlight, value); }
     }
 }

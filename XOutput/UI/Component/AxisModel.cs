@@ -4,44 +4,12 @@ namespace XOutput.UI.Component
 {
     public class AxisModel : ModelBase
     {
-        private InputSource type;
-        public InputSource Type
-        {
-            get => type;
-            set
-            {
-                if (type != value)
-                {
-                    type = value;
-                    OnPropertyChanged(nameof(Type));
-                }
-            }
-        }
-        private int value;
-        public int Value
-        {
-            get => value;
-            set
-            {
-                if (this.value != value)
-                {
-                    this.value = value;
-                    OnPropertyChanged(nameof(AxisModel.Value));
-                }
-            }
-        }
-        private int max;
-        public int Max
-        {
-            get => max;
-            set
-            {
-                if (max != value)
-                {
-                    max = value;
-                    OnPropertyChanged(nameof(Max));
-                }
-            }
-        }
+        private InputSource _type;
+        private int _value;
+        private int _max;
+
+        public InputSource Type { get => _type; set => SetProperty(ref _type, value); }
+        public int Value { get => _value; set => SetProperty(ref _value, value); }
+        public int Max { get => _max; set => SetProperty(ref _max, value); }
     }
 }

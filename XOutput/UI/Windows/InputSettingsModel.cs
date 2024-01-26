@@ -5,107 +5,30 @@ namespace XOutput.UI.Windows
 {
     public class InputSettingsModel : ModelBase
     {
+        private string _title;
+        private string _forceFeedbackText;
+        private string _testButtonText;
+        private bool _forceFeedbackEnabled;
+        private bool _forceFeedbackAvailable;
+        private bool _isAdmin;
+        private bool _hidGuardianAdded;
+
         public ObservableCollection<IUpdatableView> InputAxisViews { get; } = new ObservableCollection<IUpdatableView>();
         public ObservableCollection<IUpdatableView> InputDPadViews { get; } = new ObservableCollection<IUpdatableView>();
         public ObservableCollection<IUpdatableView> InputButtonViews { get; } = new ObservableCollection<IUpdatableView>();
 
+        public string Title { get => _title; set => SetProperty(ref _title, value); }
 
-        private string title;
-        public string Title
-        {
-            get => title;
-            set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    OnPropertyChanged(nameof(Title));
-                }
-            }
-        }
+        public string ForceFeedbackText { get => _forceFeedbackText; set => SetProperty(ref _forceFeedbackText, value); }
 
-        private string forceFeedbackText;
-        public string ForceFeedbackText
-        {
-            get => forceFeedbackText;
-            set
-            {
-                if (forceFeedbackText != value)
-                {
-                    forceFeedbackText = value;
-                    OnPropertyChanged(nameof(ForceFeedbackText));
-                }
-            }
-        }
+        public string TestButtonText { get => _testButtonText; set => SetProperty(ref _testButtonText, value); }
 
-        private string testButtonText;
-        public string TestButtonText
-        {
-            get => testButtonText;
-            set
-            {
-                if (testButtonText != value)
-                {
-                    testButtonText = value;
-                    OnPropertyChanged(nameof(TestButtonText));
-                }
-            }
-        }
+        public bool ForceFeedbackEnabled { get => _forceFeedbackEnabled; set => SetProperty(ref _forceFeedbackEnabled, value); }
 
-        private bool forceFeedbackEnabled;
-        public bool ForceFeedbackEnabled
-        {
-            get => forceFeedbackEnabled;
-            set
-            {
-                if (forceFeedbackEnabled != value)
-                {
-                    forceFeedbackEnabled = value;
-                    OnPropertyChanged(nameof(ForceFeedbackEnabled));
-                }
-            }
-        }
+        public bool ForceFeedbackAvailable { get => _forceFeedbackAvailable; set => SetProperty(ref _forceFeedbackAvailable, value); }
 
-        private bool forceFeedbackAvailable;
-        public bool ForceFeedbackAvailable
-        {
-            get => forceFeedbackAvailable;
-            set
-            {
-                if (forceFeedbackAvailable != value)
-                {
-                    forceFeedbackAvailable = value;
-                    OnPropertyChanged(nameof(ForceFeedbackAvailable));
-                }
-            }
-        }
+        public bool IsAdmin { get => _isAdmin; set => SetProperty(ref _isAdmin, value); }
 
-        private bool isAdmin;
-        public bool IsAdmin
-        {
-            get => isAdmin;
-            set
-            {
-                if (isAdmin != value)
-                {
-                    isAdmin = value;
-                    OnPropertyChanged(nameof(IsAdmin));
-                }
-            }
-        }
-
-        private bool hidGuardianAdded;
-        public bool HidGuardianAdded
-        {
-            get => hidGuardianAdded;
-            set
-            {
-                if (hidGuardianAdded != value)
-                {
-                    hidGuardianAdded = value;
-                    OnPropertyChanged(nameof(HidGuardianAdded));
-                }
-            }
-        }
+        public bool HidGuardianAdded { get => _hidGuardianAdded; set => SetProperty(ref _hidGuardianAdded, value); }
     }
 }

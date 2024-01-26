@@ -6,9 +6,9 @@ namespace XOutput.UI.Windows
 {
     public class ControllerSettingsModel : ModelBase
     {
-        private ComboBoxItem forceFeedback;
-        private string title;
-        private bool startWhenConnected;
+        private ComboBoxItem _forceFeedback;
+        private string _title;
+        private bool _startWhenConnected;
 
         public ObservableCollection<MappingView> MapperAxisViews { get; } = new ObservableCollection<MappingView>();
         public ObservableCollection<MappingView> MapperDPadViews { get; } = new ObservableCollection<MappingView>();
@@ -18,43 +18,10 @@ namespace XOutput.UI.Windows
         public ObservableCollection<IUpdatableView> XInputButtonViews { get; } = new ObservableCollection<IUpdatableView>();
         public ObservableCollection<ComboBoxItem> ForceFeedbacks { get; } = new ObservableCollection<ComboBoxItem>();
 
-        public ComboBoxItem ForceFeedback
-        {
-            get => forceFeedback;
-            set
-            {
-                if (forceFeedback != value)
-                {
-                    forceFeedback = value;
-                    OnPropertyChanged(nameof(ForceFeedback));
-                }
-            }
-        }
+        public ComboBoxItem ForceFeedback { get => _forceFeedback; set => SetProperty(ref _forceFeedback, value); }
 
-        public string Title
-        {
-            get => title;
-            set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    OnPropertyChanged(nameof(Title));
-                }
-            }
-        }
+        public string Title { get => _title; set => SetProperty(ref _title, value); }
 
-        public bool StartWhenConnected
-        {
-            get => startWhenConnected;
-            set
-            {
-                if (startWhenConnected != value)
-                {
-                    startWhenConnected = value;
-                    OnPropertyChanged(nameof(StartWhenConnected));
-                }
-            }
-        }
+        public bool StartWhenConnected { get => _startWhenConnected; set => SetProperty(ref _startWhenConnected, value); }
     }
 }

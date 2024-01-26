@@ -5,34 +5,13 @@ namespace XOutput.UI.Component
 {
     public class InputModel : ModelBase
     {
-        private IInputDevice device;
-        public IInputDevice Device
-        {
-            get => device;
-            set
-            {
-                if (device != value)
-                {
-                    device = value;
-                    OnPropertyChanged(nameof(Device));
-                }
-            }
-        }
+        private IInputDevice _device;
+        private Brush _background;
 
-        private Brush background;
-        public Brush Background
-        {
-            get => background;
-            set
-            {
-                if (background != value)
-                {
-                    background = value;
-                    OnPropertyChanged(nameof(Background));
-                }
-            }
-        }
+        public IInputDevice Device { get => _device; set => SetProperty(ref _device, value); }
 
-        public string DisplayName { get { return string.Format("{0} ({1})", device.DisplayName, device.UniqueId); } }
+        public Brush Background { get => _background; set => SetProperty(ref _background, value); }
+
+        public string DisplayName => string.Format("{0} ({1})", _device.DisplayName, _device.UniqueId);
     }
 }

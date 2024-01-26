@@ -39,12 +39,12 @@ namespace XOutput.UI.Component
             SetSelected(GetMapperData());
         }
 
-        protected MapperData GetMapperData()
+        private MapperData GetMapperData()
         {
             return controller.Mapper.GetMapping(Model.XInputType).Mappers[0]; // TODO
         }
 
-        protected void SetSelected(MapperData mapperData)
+        private void SetSelected(MapperData mapperData)
         {
             if (Helper.DoubleEquals(mapperData.MinValue, Model.XInputType.GetDisableValue()) && Helper.DoubleEquals(mapperData.MaxValue, Model.XInputType.GetDisableValue()))
             {
@@ -66,7 +66,7 @@ namespace XOutput.UI.Component
             }
         }
 
-        protected void SelectionChanged(InputSource type)
+        private void SelectionChanged(InputSource type)
         {
             if (type.Type == InputSourceTypes.Disabled)
             {

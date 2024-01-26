@@ -20,9 +20,7 @@ namespace XOutput.UI.Converters
         /// <param name="culture">Ignored</param>
         /// <returns>If the values equal</returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
-        }
+            => value.Equals(parameter) ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
         /// Intentionally not implemented.
@@ -32,9 +30,6 @@ namespace XOutput.UI.Converters
         /// <param name="parameter">Ignored</param>
         /// <param name="culture">Ignored</param>
         /// <returns></returns>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

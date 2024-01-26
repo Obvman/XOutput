@@ -4,31 +4,10 @@ namespace XOutput.UI.Component
 {
     public class ButtonModel : ModelBase
     {
-        private InputSource type;
-        public InputSource Type
-        {
-            get => type;
-            set
-            {
-                if (type != value)
-                {
-                    type = value;
-                    OnPropertyChanged(nameof(Type));
-                }
-            }
-        }
-        private bool value;
-        public bool Value
-        {
-            get => value;
-            set
-            {
-                if (this.value != value)
-                {
-                    this.value = value;
-                    OnPropertyChanged(nameof(Value));
-                }
-            }
-        }
+        private bool _value;
+        private InputSource _type;
+
+        public InputSource Type { get => _type; set => SetProperty(ref _type, value); }
+        public bool Value { get => _value; set => SetProperty(ref _value, value); }
     }
 }

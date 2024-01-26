@@ -7,42 +7,23 @@ namespace XOutput.UI
 {
     public class MappingModel : ModelBase
     {
-        private XInputTypes xInputType;
-        public XInputTypes XInputType
-        {
-            get => xInputType;
-            set
-            {
-                if (xInputType != value)
-                {
-                    xInputType = value;
-                    OnPropertyChanged(nameof(XInputType));
-                }
-            }
-        }
+        private XInputTypes _xInputType;
+        private InputSource _selectedInput;
+        private Visibility _configVisibility;
+        private MapperData _mapperData;
 
-        private InputSource selectedInput;
-        public InputSource SelectedInput
-        {
-            get => selectedInput;
-            set
-            {
-                if (selectedInput != value)
-                {
-                    selectedInput = value;
-                    OnPropertyChanged(nameof(SelectedInput));
-                }
-            }
-        }
+        public XInputTypes XInputType { get => _xInputType; set => SetProperty(ref _xInputType, value); }
+
+        public InputSource SelectedInput { get => _selectedInput; set => SetProperty(ref _selectedInput, value); }
 
         public decimal? Min
         {
-            get => (decimal)mapperData.MinValue * 100;
+            get => (decimal)_mapperData.MinValue * 100;
             set
             {
-                if ((decimal)mapperData.MinValue != value)
+                if ((decimal)_mapperData.MinValue != value)
                 {
-                    mapperData.MinValue = (double)(value ?? 0) / 100;
+                    _mapperData.MinValue = (double)(value ?? 0) / 100;
                     OnPropertyChanged(nameof(Min));
                 }
             }
@@ -50,12 +31,12 @@ namespace XOutput.UI
 
         public decimal? Max
         {
-            get => (decimal)mapperData.MaxValue * 100;
+            get => (decimal)_mapperData.MaxValue * 100;
             set
             {
-                if ((decimal)mapperData.MaxValue != value)
+                if ((decimal)_mapperData.MaxValue != value)
                 {
-                    mapperData.MaxValue = (double)(value ?? 100) / 100;
+                    _mapperData.MaxValue = (double)(value ?? 100) / 100;
                     OnPropertyChanged(nameof(Max));
                 }
             }
@@ -63,44 +44,20 @@ namespace XOutput.UI
 
         public decimal? Deadzone
         {
-            get => (decimal)mapperData.Deadzone * 100;
+            get => (decimal)_mapperData.Deadzone * 100;
             set
             {
-                if ((decimal)mapperData.Deadzone != value)
+                if ((decimal)_mapperData.Deadzone != value)
                 {
-                    mapperData.Deadzone = (double)(value ?? 100) / 100;
+                    _mapperData.Deadzone = (double)(value ?? 100) / 100;
                     OnPropertyChanged(nameof(Deadzone));
                 }
             }
         }
 
-        private Visibility configVisibility;
-        public Visibility ConfigVisibility
-        {
-            get { return configVisibility; }
-            set
-            {
-                if (configVisibility != value)
-                {
-                    configVisibility = value;
-                    OnPropertyChanged(nameof(ConfigVisibility));
-                }
-            }
-        }
+        public Visibility ConfigVisibility { get => _configVisibility; set => SetProperty(ref _configVisibility, value); }
 
-        private MapperData mapperData;
-        public MapperData MapperData
-        {
-            get => mapperData;
-            set
-            {
-                if (mapperData != value)
-                {
-                    mapperData = value;
-                    OnPropertyChanged(nameof(MapperData));
-                }
-            }
-        }
+        public MapperData MapperData { get => _mapperData; set => SetProperty(ref _mapperData, value); }
 
         public void Refresh()
         {
