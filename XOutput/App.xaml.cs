@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using XOutput.Logging;
 using XOutput.Tools;
 using XOutput.UI.Windows;
@@ -57,7 +56,8 @@ namespace XOutput
             if (singleInstanceProvider.TryGetLock())
             {
                 singleInstanceProvider.StartNamedPipe();
-                try {
+                try
+                {
                     var mainWindow = ApplicationContext.Global.Resolve<MainWindow>();
                     mainWindowViewModel = mainWindow.ViewModel;
                     MainWindow = mainWindow;
@@ -67,7 +67,9 @@ namespace XOutput
                         mainWindow.Show();
                     }
                     ApplicationContext.Global.Resolve<Devices.Input.Mouse.MouseHook>().StartHook();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     logger.Error(ex);
                     MessageBox.Show(ex.ToString());
                     Application.Current.Shutdown();

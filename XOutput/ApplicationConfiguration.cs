@@ -1,34 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using XOutput.Tools;
-using XOutput.UI.Windows;
+﻿using XOutput.Tools;
 
 namespace XOutput
 {
     public static class ApplicationConfiguration
     {
         [ResolverMethod]
-        public static ArgumentParser GetArgumentParser()
-        {
-            return new ArgumentParser();
-        }
+        public static ArgumentParser GetArgumentParser() => new ArgumentParser();
+
         [ResolverMethod]
-        public static HidGuardianManager GetHidGuardianManager()
-        {
-            return new HidGuardianManager();
-        }
+        public static HidGuardianManager GetHidGuardianManager() => new HidGuardianManager();
+
         [ResolverMethod]
-        public static RegistryModifier GetRegistryModifier()
-        {
-            return new RegistryModifier();
-        }
+        public static RegistryModifier GetRegistryModifier() => new RegistryModifier();
+
         [ResolverMethod]
-        public static Devices.Input.Mouse.MouseHook GetMouseHook()
-        {
-            return new Devices.Input.Mouse.MouseHook();
-        }
+        public static Devices.Input.Mouse.MouseHook GetMouseHook() => new Devices.Input.Mouse.MouseHook();
     }
 }
