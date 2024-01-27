@@ -9,11 +9,11 @@
         d:DataContext="{d:DesignInstance Type=local:AutoConfigureViewModel, IsDesignTimeCreatable=False}"
         Loaded="WindowLoaded"
         Closed="WindowClosed"
-        Title="AutoConfigure" Height="620" Width="550" ResizeMode="CanMinimize">
+        Title="Configure" Height="620" Width="550" ResizeMode="CanMinimize">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="7*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -47,14 +47,28 @@
                 </MultiBinding>
             </Label.Content>
         </Label>
+
         <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='MinimumValue'}"/>
         <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Content="{Binding Model.MinValue}"/>
+
         <Label VerticalAlignment="Center" Grid.Row="3" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='MaximumValue'}"/>
         <Label VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Content="{Binding Model.MaxValue}"/>
+
         <Label VerticalAlignment="Center" Grid.Row="4" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='SelectedValue'}"/>
         <Label VerticalAlignment="Center" Grid.Row="4" Grid.Column="1" Content="{Binding Model.MaxType}"/>
+
         <Label VerticalAlignment="Center" Grid.Row="5" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='SelectedDevice'}"/>
-        <Label VerticalAlignment="Center" Grid.Row="5" Grid.Column="1" Content="{Binding Model.MaxType.InputDevice.DisplayName}"/>
+        <Label VerticalAlignment="Center" Grid.Row="5" Grid.Column="1">
+            <Run>
+                <Run.Text>
+                    <MultiBinding StringFormat="{}{0} ({1})">
+                        <Binding Path="Model.MaxType.InputDevice.DisplayName" Mode="OneWay"/>
+                        <Binding Path="Model.MaxType.InputDevice.UniqueId" Mode="OneWay"/>
+                    </MultiBinding>
+                </Run.Text>
+            </Run>
+        </Label>
+
         <Grid Grid.Row="6" Grid.ColumnSpan="2" Visibility="{Binding Model.ButtonsVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

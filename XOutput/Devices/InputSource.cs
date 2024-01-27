@@ -8,6 +8,12 @@ namespace XOutput.Devices
     /// </summary>
     public abstract class InputSource
     {
+        protected IInputDevice inputDevice;
+        protected string name;
+        protected InputSourceTypes type;
+        protected int offset;
+        protected double value;
+
         /// <summary>
         /// This event is invoked if the data from the source was updated.
         /// </summary>
@@ -47,12 +53,6 @@ namespace XOutput.Devices
         /// If the input is a button.
         /// </summary>
         public bool IsButton => type == InputSourceTypes.Button;
-
-        protected IInputDevice inputDevice;
-        protected string name;
-        protected InputSourceTypes type;
-        protected int offset;
-        protected double value;
 
         protected InputSource(IInputDevice inputDevice, string name, InputSourceTypes type, int offset)
         {

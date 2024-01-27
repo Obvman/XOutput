@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Threading;
 using XOutput.Devices;
 using XOutput.Devices.Input;
@@ -17,6 +18,7 @@ namespace XOutput.UI.Windows
         private const int ShortAxisWaitTime = 3000;
         private const int ShortWaitTime = 1000;
         private const int BlinkTime = 500;
+
         private readonly Dictionary<InputSource, double> referenceValues = new Dictionary<InputSource, double>();
         private readonly DispatcherTimer timer = new DispatcherTimer();
         private readonly IEnumerable<IInputDevice> inputDevices;
@@ -25,6 +27,7 @@ namespace XOutput.UI.Windows
         private XInputTypes xInputType;
         private readonly InputSource[] inputTypes;
         private DateTime lastTime;
+
         public Func<bool> IsMouseOverButtons { get; set; }
 
         public AutoConfigureViewModel(AutoConfigureModel model, IEnumerable<IInputDevice> inputDevices, InputMapper mapper, XInputTypes[] valuesToRead) : base(model)
@@ -35,13 +38,13 @@ namespace XOutput.UI.Windows
             xInputType = valuesToRead.First();
             if (valuesToRead.Length > 1)
             {
-                Model.ButtonsVisibility = System.Windows.Visibility.Collapsed;
-                Model.TimerVisibility = System.Windows.Visibility.Visible;
+                Model.ButtonsVisibility = Visibility.Collapsed;
+                Model.TimerVisibility = Visibility.Visible;
             }
             else
             {
-                Model.ButtonsVisibility = System.Windows.Visibility.Visible;
-                Model.TimerVisibility = System.Windows.Visibility.Collapsed;
+                Model.ButtonsVisibility = Visibility.Visible;
+                Model.TimerVisibility = Visibility.Collapsed;
             }
             inputTypes = inputDevices.SelectMany(i => i.Sources).ToArray();
             timer.Interval = TimeSpan.FromMilliseconds(BlinkTime);
