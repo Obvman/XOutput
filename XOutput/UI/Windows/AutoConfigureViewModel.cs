@@ -30,7 +30,8 @@ namespace XOutput.UI.Windows
 
         public Func<bool> IsMouseOverButtons { get; set; }
 
-        public AutoConfigureViewModel(AutoConfigureModel model, IEnumerable<IInputDevice> inputDevices, InputMapper mapper, XInputTypes[] valuesToRead) : base(model)
+        public AutoConfigureViewModel(AutoConfigureModel model, IEnumerable<IInputDevice> inputDevices, InputMapper mapper,
+                                      XInputTypes[] valuesToRead) : base(model)
         {
             this.mapper = mapper;
             this.inputDevices = inputDevices;
@@ -52,23 +53,38 @@ namespace XOutput.UI.Windows
             timer.Start();
         }
 
+        public void Initialize()
+        {
+            ReadReferenceValues();
+
+            var mappings = mapper.Mappings[xInputType].Mappers;
+            if (mappings.Any())
+            {
+                foreach (var mapping in mappings)
+                    Model.InputConfigurations.Add(new InputConfigurationModel(mapping.Source,
+                                                                              mapping.MinValue * 100,
+                                                                              mapping.MaxValue * 100));
+            }
+            else
+            {
+                Model.InputConfigurations.Add(new InputConfigurationModel(null, 0.0, 0.0));
+            }
+            Model.SelectedInputConfiguration = Model.InputConfigurations.First();
+
+            Model.XInput = xInputType;
+
+            SetTime(false);
+
+            foreach (var inputDevice in inputDevices)
+                inputDevice.InputChanged += ReadValues;
+        }
+
         private void TimerTick(object sender, EventArgs e)
         {
             Model.Highlight = !Model.Highlight;
         }
 
-        public void Initialize()
-        {
-            ReadReferenceValues();
-            foreach (var inputDevice in inputDevices)
-            {
-                inputDevice.InputChanged += ReadValues;
-            }
-            Model.XInput = xInputType;
-            SetTime(false);
-        }
-
-        protected void ReadReferenceValues()
+        private void ReadReferenceValues()
         {
             foreach (var type in inputTypes)
             {
@@ -85,9 +101,8 @@ namespace XOutput.UI.Windows
         private void ReadValues(object sender, DeviceInputChangedEventArgs e)
         {
             if (e.Device is Mouse && (IsMouseOverButtons?.Invoke() ?? false))
-            {
                 return;
-            }
+
             var inputDevice = e.Device;
             InputSource maxType = null;
             double maxDiff = 0;
@@ -102,12 +117,15 @@ namespace XOutput.UI.Windows
                     maxDiff = diff;
                 }
             }
-            if (maxDiff > 0.3 && maxType != Model.MaxType)
+
+            if (maxDiff > 0.3 && maxType != Model.SelectedInputConfiguration.MaxType)
             {
-                Model.MaxType = maxType;
+                Model.SelectedInputConfiguration.MaxType = maxType;
                 CalculateStartValues();
             }
-            if (Model.MaxType != null)
+
+            if (Model.SelectedInputConfiguration.MaxType != null &&
+                Model.SelectedInputConfiguration.MaxType.InputDevice != null)
             {
                 CalculateValues();
             }
@@ -116,31 +134,44 @@ namespace XOutput.UI.Windows
         public bool SaveDisableValues()
         {
             var mapperCollection = mapper.GetMapping(xInputType);
-            MapperData md = mapperCollection.Mappers[0]; // TODO
-            if (md.InputType == null)
+            foreach (MapperData md in mapperCollection.Mappers)
             {
-                md.Source = inputTypes.First();
+                if (md.InputType == null)
+                    md.Source = inputTypes.First();
+
+                md.MinValue = Model.XInput.GetDisableValue();
+                md.MaxValue = Model.XInput.GetDisableValue();
             }
-            md.MinValue = Model.XInput.GetDisableValue();
-            md.MaxValue = Model.XInput.GetDisableValue();
             return Next();
         }
 
         public bool SaveValues()
         {
-            if (Model.MaxType != null)
+            bool anyValidInputValues = Model.InputConfigurations.Any(
+                inputConfiguration => inputConfiguration.MaxType != null && inputConfiguration.MaxType.InputDevice != null);
+            if (anyValidInputValues)
             {
-                var mapperCollection = mapper.GetMapping(xInputType);
-                MapperData md = mapperCollection.Mappers[0]; // TODO
-                md.Source = Model.MaxType;
-                md.MinValue = Model.MinValue / 100;
-                md.MaxValue = Model.MaxValue / 100;
+                var mappers = mapper.GetMapping(xInputType).Mappers;
+                mappers.Clear();
+
+                foreach (var inputConfiguration in Model.InputConfigurations)
+                {
+                    if (inputConfiguration.MaxType != null && inputConfiguration.MaxType.InputDevice != null)
+                    {
+                        var mapperData = new MapperData
+                        {
+                            Source = inputConfiguration.MaxType,
+                            MinValue = inputConfiguration.MinValue / 100,
+                            MaxValue = inputConfiguration.MaxValue / 100
+                        };
+                        mappers.Add(mapperData);
+                    }
+                }
+
                 return Next();
             }
             else
-            {
                 return SaveDisableValues();
-            }
         }
 
         public bool IncreaseTime()
@@ -159,6 +190,18 @@ namespace XOutput.UI.Windows
             timer.Stop();
         }
 
+        public void AddInput()
+        {
+            Model.InputConfigurations.Add(new InputConfigurationModel(null, 0.0, 0.0));
+            Model.SelectedInputConfiguration = Model.InputConfigurations.Last();
+        }
+
+        public void RemovedSelectedInput()
+        {
+            Model.InputConfigurations.Remove(Model.SelectedInputConfiguration);
+            Model.SelectedInputConfiguration = Model.InputConfigurations.First();
+        }
+
         protected void SetTime(bool shortTime)
         {
             Model.TimerValue = 0;
@@ -175,7 +218,7 @@ namespace XOutput.UI.Windows
 
         protected bool Next()
         {
-            Model.MaxType = null;
+            Model.SelectedInputConfiguration.MaxType = null;
             int index = Array.IndexOf(valuesToRead, xInputType);
             SetTime(false);
             if (index + 1 < valuesToRead.Length)
@@ -189,32 +232,32 @@ namespace XOutput.UI.Windows
 
         private void CalculateValues()
         {
-            double current = Model.MaxType.InputDevice.Get(Model.MaxType);
+            double current = Model.SelectedInputConfiguration.MaxType.InputDevice.Get(Model.SelectedInputConfiguration.MaxType);
 
-            double min = Math.Min(current, Model.MinValue / 100);
+            double min = Math.Min(current, Model.SelectedInputConfiguration.MinValue / 100);
             double minValue = Math.Round(min * 100);
 
-            double max = Math.Max(current, Model.MaxValue / 100);
+            double max = Math.Max(current, Model.SelectedInputConfiguration.MaxValue / 100);
             double maxValue = Math.Round(max * 100);
 
-            if (!Helper.DoubleEquals(minValue, Model.MinValue) || !Helper.DoubleEquals(maxValue, Model.MaxValue))
+            if (!Helper.DoubleEquals(minValue, Model.SelectedInputConfiguration.MinValue) || !Helper.DoubleEquals(maxValue, Model.SelectedInputConfiguration.MaxValue))
             {
-                Model.MinValue = minValue;
-                Model.MaxValue = maxValue;
+                Model.SelectedInputConfiguration.MinValue = minValue;
+                Model.SelectedInputConfiguration.MaxValue = maxValue;
                 SetTime(true);
             }
         }
 
         private void CalculateStartValues()
         {
-            double current = Model.MaxType.InputDevice.Get(Model.MaxType);
-            double reference = referenceValues[Model.MaxType];
+            double current = Model.SelectedInputConfiguration.MaxType.InputDevice.Get(Model.SelectedInputConfiguration.MaxType);
+            double reference = referenceValues[Model.SelectedInputConfiguration.MaxType];
 
             double min = Math.Min(current, reference);
-            Model.MinValue = Math.Round(min * 100);
+            Model.SelectedInputConfiguration.MinValue = Math.Round(min * 100);
 
             double max = Math.Max(current, reference);
-            Model.MaxValue = Math.Round(max * 100);
+            Model.SelectedInputConfiguration.MaxValue = Math.Round(max * 100);
 
             SetTime(true);
         }

@@ -41,7 +41,7 @@ namespace XOutput
             singleInstanceProvider = new SingleInstanceProvider();
             argumentParser = globalContext.Resolve<ArgumentParser>();
 #if !DEBUG
-            Dispatcher.UnhandledException += async (object sender, DispatcherUnhandledExceptionEventArgs e) => await UnhandledException(e.Exception);
+            Dispatcher.UnhandledException += async (object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e) => await UnhandledException(e.Exception);
 #endif
         }
 

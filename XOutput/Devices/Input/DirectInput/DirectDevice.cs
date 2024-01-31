@@ -306,7 +306,7 @@ namespace XOutput.Devices.Input.DirectInput
 
                     if (state.AnyChangedDpads(force) || state.AnyChanges(force))
                     {
-                        var changes = state.GetChanges(force);
+                        var changes = state.GetChanges(force).ToArray();
                         var changedDPads = state.GetChangedDpads(force);
                         InputChanged?.Invoke(this, new DeviceInputChangedEventArgs(this, changes, changedDPads));
                     }

@@ -96,6 +96,7 @@ namespace XOutput.Devices.Mapper
             }
             return mappedValue;
         }
+
         public void SetSourceWithoutSaving(InputSource value)
         {
             var newValue = value ?? DisabledInputSource.Instance;

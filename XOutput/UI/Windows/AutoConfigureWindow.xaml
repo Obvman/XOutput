@@ -9,7 +9,7 @@
         d:DataContext="{d:DesignInstance Type=local:AutoConfigureViewModel, IsDesignTimeCreatable=False}"
         Loaded="WindowLoaded"
         Closed="WindowClosed"
-        Title="Configure" Height="620" Width="550" ResizeMode="CanMinimize">
+        Title="Configure" Height="820" Width="550" ResizeMode="CanMinimize">
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -17,14 +17,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="360"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
         <ProgressBar Visibility="{Binding Model.TimerVisibility}" Minimum="0" Value="{Binding Model.TimerValue}" Maximum="{Binding Model.TimerMaxValue}" Grid.ColumnSpan="2"
                      Width="200" Margin="5 0 0 0"/>
 
@@ -43,33 +42,70 @@
             <Label.Content>
                 <MultiBinding Converter="{StaticResource DynamicLanguageConverter}">
                     <Binding Path="LanguageModel.Data" />
-                    <Binding Path="Model.MaxType" />
+                    <Binding Path="Model.SelectedInputConfiguration.MaxType" />
                 </MultiBinding>
             </Label.Content>
         </Label>
 
-        <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='MinimumValue'}"/>
-        <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Content="{Binding Model.MinValue}"/>
+        <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" Content="Mappings"/>
+        <!-- TODO translations-->
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Margin="5 0" Padding="10" Click="AddInputClick" Content="Add Input" Name="AddInputButton"/>
+            <Button Margin="5 0" Padding="10" Click="RemoveInputClick" Content="Remove Input" Name="RemoveInputButton"
+                    IsEnabled="{Binding Model.CanRemoveInput}"/>
+        </StackPanel>
 
-        <Label VerticalAlignment="Center" Grid.Row="3" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='MaximumValue'}"/>
-        <Label VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Content="{Binding Model.MaxValue}"/>
+        <ListView Name="InputConfigurationsList" VerticalAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" Height="190"
+                  ItemsSource="{Binding Model.InputConfigurations}"
+                  SelectedItem="{Binding Model.SelectedInputConfiguration}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="200" Header="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='SelectedDevice'}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label>
+                                    <Run>
+                                        <Run.Text>
+                                            <MultiBinding StringFormat="{}{0} ({1})">
+                                                <Binding Path="MaxType.InputDevice.DisplayName" Mode="OneWay"/>
+                                                <Binding Path="MaxType.InputDevice.UniqueId" Mode="OneWay"/>
+                                            </MultiBinding>
+                                        </Run.Text>
+                                    </Run>
+                                </Label>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-        <Label VerticalAlignment="Center" Grid.Row="4" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='SelectedValue'}"/>
-        <Label VerticalAlignment="Center" Grid.Row="4" Grid.Column="1" Content="{Binding Model.MaxType}"/>
+                    <GridViewColumn Width="100" Header="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='SelectedValue'}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding MaxType}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-        <Label VerticalAlignment="Center" Grid.Row="5" Grid.Column="0" Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='SelectedDevice'}"/>
-        <Label VerticalAlignment="Center" Grid.Row="5" Grid.Column="1">
-            <Run>
-                <Run.Text>
-                    <MultiBinding StringFormat="{}{0} ({1})">
-                        <Binding Path="Model.MaxType.InputDevice.DisplayName" Mode="OneWay"/>
-                        <Binding Path="Model.MaxType.InputDevice.UniqueId" Mode="OneWay"/>
-                    </MultiBinding>
-                </Run.Text>
-            </Run>
-        </Label>
+                    <GridViewColumn Width="100" Header="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='MinimumValue'}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding MinValue}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
 
-        <Grid Grid.Row="6" Grid.ColumnSpan="2" Visibility="{Binding Model.ButtonsVisibility}">
+                    <GridViewColumn Width="100" Header="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='MaximumValue'}">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Label Content="{Binding MaxValue}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Grid Grid.Row="4" Grid.ColumnSpan="2" Visibility="{Binding Model.ButtonsVisibility}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -79,13 +115,13 @@
             <Button Margin="5 0" Padding="10" Grid.Row="3" Grid.Column="1" Click="DisableClick" Name="DisableButton"
                 Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='Disable'}"/>
             <Button Margin="5 0" Padding="10" Grid.Row="3" Grid.Column="2" Click="SaveClick" Name="SaveButton"
-                IsEnabled="{Binding Model.MaxType, Converter={StaticResource NotNullToBoolConverter}}"
+                IsEnabled="{Binding Model.SelectedInputConfiguration.MaxType, Converter={StaticResource NotNullToBoolConverter}}"
                 Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='Save'}"/>
             <Button Margin="5 0" Padding="10" Grid.Row="3" Grid.Column="3" Click="CancelClick"
                 Content="{Binding LanguageModel.Data, Converter={StaticResource LanguageConverter}, ConverterParameter='Cancel'}" />
         </Grid>
 
-        <Components:XBox Grid.Row="7" Grid.ColumnSpan="2" 
+        <Components:XBox Grid.Row="5" Grid.ColumnSpan="2" 
                          XInputType="{Binding DataContext.Model.XInput, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
                          Highlight="{Binding DataContext.Model.Highlight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
 

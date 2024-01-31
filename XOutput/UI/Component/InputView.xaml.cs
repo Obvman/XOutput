@@ -8,18 +8,15 @@ namespace XOutput.UI.Component
     /// </summary>
     public partial class InputView : UserControl, IViewBase<InputViewModel, InputModel>
     {
-        protected readonly InputViewModel viewModel;
-        public InputViewModel ViewModel => viewModel;
+        public InputViewModel ViewModel { get; }
 
         public InputView(InputViewModel viewModel)
         {
-            this.viewModel = viewModel;
+            ViewModel = viewModel;
             DataContext = viewModel;
             InitializeComponent();
         }
-        private void OpenClick(object sender, RoutedEventArgs e)
-        {
-            viewModel.Edit();
-        }
+
+        private void OpenClick(object sender, RoutedEventArgs e) => ViewModel.Edit();
     }
 }

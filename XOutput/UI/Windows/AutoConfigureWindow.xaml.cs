@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace XOutput.UI.Windows
@@ -11,14 +10,14 @@ namespace XOutput.UI.Windows
     /// </summary>
     public partial class AutoConfigureWindow : Window, IViewBase<AutoConfigureViewModel, AutoConfigureModel>
     {
-        private readonly AutoConfigureViewModel viewModel;
         private readonly DispatcherTimer timer = new DispatcherTimer();
         private readonly bool timed;
-        public AutoConfigureViewModel ViewModel => viewModel;
+
+        public AutoConfigureViewModel ViewModel { get; }
 
         public AutoConfigureWindow(AutoConfigureViewModel viewModel, bool timed)
         {
-            this.viewModel = viewModel;
+            this.ViewModel = viewModel;
             this.timed = timed;
             DataContext = viewModel;
             InitializeComponent();
@@ -27,11 +26,11 @@ namespace XOutput.UI.Windows
         private async void WindowLoaded(object sender, RoutedEventArgs e)
         {
             await Task.Delay(100);
-            viewModel.Initialize();
-            viewModel.IsMouseOverButtons = () =>
-            {
-                return DisableButton.IsMouseOver || SaveButton.IsMouseOver;
-            };
+            ViewModel.Initialize();
+            ViewModel.IsMouseOverButtons =
+                () => DisableButton.IsMouseOver || SaveButton.IsMouseOver || InputConfigurationsList.IsMouseOver ||
+                      AddInputButton.IsMouseOver || RemoveInputButton.IsMouseOver;
+
             if (timed)
             {
                 timer.Interval = TimeSpan.FromMilliseconds(25);
@@ -42,9 +41,9 @@ namespace XOutput.UI.Windows
 
         private void TimerTick(object sender, EventArgs e)
         {
-            if (viewModel.IncreaseTime())
+            if (ViewModel.IncreaseTime())
             {
-                bool hasNextInput = viewModel.SaveValues();
+                bool hasNextInput = ViewModel.SaveValues();
                 if (!hasNextInput)
                 {
                     Close();
@@ -54,7 +53,7 @@ namespace XOutput.UI.Windows
 
         private void DisableClick(object sender, RoutedEventArgs e)
         {
-            if (!viewModel.SaveDisableValues())
+            if (!ViewModel.SaveDisableValues())
             {
                 Close();
             }
@@ -62,7 +61,7 @@ namespace XOutput.UI.Windows
 
         private void SaveClick(object sender, RoutedEventArgs e)
         {
-            if (!viewModel.SaveValues())
+            if (!ViewModel.SaveValues())
             {
                 Close();
             }
@@ -73,11 +72,15 @@ namespace XOutput.UI.Windows
             Close();
         }
 
+        private void AddInputClick(object sender, RoutedEventArgs e) => ViewModel.AddInput();
+
+        private void RemoveInputClick(object sender, RoutedEventArgs e) => ViewModel.RemovedSelectedInput();
+
         private void WindowClosed(object sender, EventArgs e)
         {
             timer.Tick -= TimerTick;
             timer.Stop();
-            viewModel.Close();
+            ViewModel.Close();
         }
     }
 }
