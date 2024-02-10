@@ -42,7 +42,7 @@ namespace XOutput.Devices.Mapper
 
         public InputMapper Duplicate()
         {
-            var mapper = new InputMapper
+            var inputMapper = new InputMapper
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = Name + " (Copy)",
@@ -53,10 +53,11 @@ namespace XOutput.Devices.Mapper
 
             foreach (var kvPair in Mappings)
             {
-                mapper.Mappings[kvPair.Key] = new MapperDataCollection(kvPair.Value.Mappers, kvPair.Value.CenterPoint);
+                var mappers = kvPair.Value.Mappers.Select(md => md.Duplicate()).ToList();
+                inputMapper.Mappings[kvPair.Key] = new MapperDataCollection(mappers, kvPair.Value.CenterPoint);
             }
 
-            return mapper;
+            return inputMapper;
         }
 
         public ISet<IInputDevice> GetInputs() => inputs;

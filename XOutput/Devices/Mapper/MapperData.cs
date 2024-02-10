@@ -63,6 +63,19 @@ namespace XOutput.Devices.Mapper
             Deadzone = 0;
         }
 
+        public MapperData Duplicate()
+        {
+            var mapperData = new MapperData()
+            {
+                Source = Source,
+                MinValue = MinValue,
+                MaxValue = MaxValue,
+                Deadzone = Deadzone,
+            };
+
+            return mapperData;
+        }
+
         /// <summary>
         /// Gets the value based on minimum and maximum values.
         /// </summary>
